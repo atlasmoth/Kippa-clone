@@ -6,8 +6,8 @@ import nc from "next-connect";
 const handler = nc();
 async function getTransactions(req, res) {
   const { user } = getSession(req, res);
-  console.log(user);
+  // console.log(user);
   res.send(user);
 }
-
+handler.get(getTransactions);
 export default handler;

@@ -14,3 +14,7 @@ a {
 * {
   box-sizing: border-box;
 }
+:root {
+  height: 100%;
+  --base-blue: rgb(114, 105, 230);
+}

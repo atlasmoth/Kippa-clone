@@ -1,11 +1,13 @@
-import { useUser } from "@auth0/nextjs-auth0";
-// import { connectToDatabase } from "./../utils/db";
-import { getSession } from "@auth0/nextjs-auth0";
+import { useUser, getSession } from "@auth0/nextjs-auth0";
+import { connectToDatabase } from "./../utils/db";
+import { useEffect } from "react";
+import axios from "axios";
 
 export default function Account() {
-  const { user, error } = useUser();
-
-  if (error) return <div>{error.message}</div>;
+  const { user } = useUser();
+  useEffect(() => {
+    axios.get("/api/transactions").then(console.log).catch(console.log);
+  }, []);
 
   if (user) {
     console.log(user);
@@ -20,7 +22,9 @@ export default function Account() {
 
 export async function getServerSideProps(ctx) {
   const { user } = getSession(ctx.req, ctx.res);
-  console.log(user);
+  const { db } = await connectToDatabase();
+  const userDoc = await db.collection("peoples").findOne({ sub: user?.sub });
+  console.log(userDoc);
   return {
     props: {},
   };
