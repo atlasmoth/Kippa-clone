@@ -1,5 +1,5 @@
 import { useUser } from "@auth0/nextjs-auth0";
-import { connectToDatabase } from "./../utils/db";
+// import { connectToDatabase } from "./../utils/db";
 import { getSession } from "@auth0/nextjs-auth0";
 
 export default function Account() {
@@ -19,7 +19,8 @@ export default function Account() {
 }
 
 export async function getServerSideProps(ctx) {
-  console.log(ctx.req);
+  const { user } = getSession(ctx.req, ctx.res);
+  console.log(user);
   return {
     props: {},
   };
