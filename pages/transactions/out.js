@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
-import { getSession } from "@auth0/nextjs-auth0";
+import axios from "axios";
+
 const data = [
   "advertising and promotion",
   "auto and truck expenses",
@@ -88,12 +89,23 @@ const data = [
   "worker’s compensation insurance",
   "email",
 ];
-export default function Create({ user }) {
+export default function Create() {
   const router = useRouter();
   function createOut(e) {
     e.preventDefault();
-    console.log(user);
-    console.log(Object.fromEntries(new FormData(e.target)));
+    const state = Object.fromEntries(new FormData(e.target));
+
+    axios
+      .post("/api/transactions", {
+        ...state,
+        date: new Date(state.date + ":" + state.time).toISOString(),
+        amount: parseFloat(state.sum),
+        type: "out",
+      })
+      .then(() => {
+        router.push("/account");
+      })
+      .catch(console.log);
   }
   return (
     <div className="create">
@@ -175,11 +187,4 @@ export default function Create({ user }) {
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(ctx) {
-  const { user } = getSession(ctx.req, ctx.res);
-  return {
-    props: { user },
-  };
 }
