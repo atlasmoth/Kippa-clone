@@ -5,10 +5,11 @@ import Link from "next/link";
 
 import Monthly from "../components/monthly";
 import Tabular from "./../components/tabular";
-
+import { useData } from "./../contexts/dataContext";
 export default function Account({ user, docs }) {
+  const context = useData();
   useEffect(() => {
-    console.log(JSON.parse(docs));
+    console.log(context);
   }, []);
 
   return (
@@ -111,7 +112,7 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
-      docs: JSON.stringify(docs),
+      docs: JSON.parse(JSON.stringify(docs)),
       user,
     },
   };
