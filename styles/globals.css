@@ -18,3 +18,20 @@ a {
   height: 100%;
   --base-blue: rgb(114, 105, 230);
 }
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+button,
+select,
+input {
+  font: inherit;
+  outline: none;
+}
+form {
+  background-color: red;
+}
+form .label {
+  display: block;
+}

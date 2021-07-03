@@ -2,6 +2,8 @@ import { useUser, getSession } from "@auth0/nextjs-auth0";
 import { connectToDatabase } from "./../utils/db";
 import { useEffect } from "react";
 import axios from "axios";
+import Monthly from "../components/monthly";
+import Tabular from "./../components/tabular";
 
 export default function Account() {
   const { user } = useUser();
@@ -12,8 +14,20 @@ export default function Account() {
   if (user) {
     console.log(user);
     return (
-      <div>
-        Welcome {user.name}! <a href="/api/auth/logout">Logout</a>
+      <div className="account">
+        <div className="container">
+          Welcome {user.name}! <a href="/api/auth/logout">Logout</a>
+          <Monthly />
+          <div className="buttons">
+            <span>
+              <button>Money Out</button>
+            </span>
+            <span>
+              <button>Money In</button>
+            </span>
+          </div>
+          <Tabular />
+        </div>
       </div>
     );
   }
