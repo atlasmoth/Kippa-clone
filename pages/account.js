@@ -1,5 +1,4 @@
 import { getSession } from "@auth0/nextjs-auth0";
-import { useEffect } from "react";
 import Link from "next/link";
 
 import Monthly from "../components/monthly";

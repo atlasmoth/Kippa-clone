@@ -2,17 +2,30 @@ import { connectToDatabase } from "./../../utils/db";
 import { getSession } from "@auth0/nextjs-auth0";
 import nc from "next-connect";
 
-const handler = nc();
+const handler = nc({ attachParams: true });
 
 async function getCustomers(req, res) {
+  let query = {};
   const { user } = getSession(req, res);
   const { db } = await connectToDatabase();
+  const { id } = req.query;
+
+  query.creator = user.sub;
+  if (id) {
+    query.customer = id;
+  }
+
   const docs = await db
     .collection("debt")
     .aggregate([
       {
-        $match: {
-          creator: user.sub,
+        $match: query,
+      },
+      {
+        $group: {
+          _id: "$type",
+          total: { $sum: "$amount" },
+          items: { $push: "$$ROOT" },
         },
       },
     ])
@@ -27,7 +40,7 @@ async function createCustomer(req, res) {
     const {
       ops: [doc],
     } = await db
-      .collection("customers")
+      .collection("debt")
       .insertOne({ ...req.body, creator: user.sub });
     res.send({ success: true, doc });
   } catch (error) {

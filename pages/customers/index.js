@@ -33,12 +33,7 @@ export default function Customers() {
         <h3>Customers</h3>
         <div className="customer-list">
           {customers.map((c) => (
-            <div className="customer-item" key={c._id}>
-              <p>
-                <span>{c.name} - </span>
-                <span>{c.phone}</span>
-              </p>
-            </div>
+            <CustomerItem c={c} key={c._id} />
           ))}
         </div>
         <div className="create-customer">
@@ -70,16 +65,28 @@ export default function Customers() {
   );
 }
 
-function CreateDebt({ type }) {
+function CreateDebt({ type, customer }) {
   function handleDebt(e) {
     e.preventDefault();
     const state = Object.fromEntries(new FormData(e.target));
-    console.log(state);
-    console.log({ type });
+
+    axios
+      .post("/api/debt", {
+        ...state,
+        amount: parseFloat(state.amount),
+        customer: customer._id,
+        type,
+        date: new Date(new Date(state.due).setHours(0, 0, 0, 0)).getTime(),
+      })
+      .then(({ data: { doc } }) => {
+        console.log(doc);
+      })
+      .catch(console.log);
   }
   return (
     <div className="debt">
-      <form>
+      <p>{type}</p>
+      <form onSubmit={handleDebt}>
         <div>
           <label htmlFor="items">Items Bought</label>
           <input type="text" name="items" id="items" />
@@ -92,7 +99,50 @@ function CreateDebt({ type }) {
           <label htmlFor="due">Due in</label>
           <input type="date" name="due" id="due" />
         </div>
+        <div>
+          <button type="submit">Save</button>
+        </div>
       </form>
+    </div>
+  );
+}
+
+function CustomerItem({ c }) {
+  const [showDebit, setShowDebit] = useState(false);
+  const [showCredit, setShowCredit] = useState(false);
+
+  return (
+    <div className="customer-item">
+      <p>
+        <span>{c.name} - </span>
+        <span>{c.phone}</span>
+      </p>
+      <p>
+        <span>
+          <button
+            onClick={() => {
+              setShowCredit(!showCredit);
+              setShowDebit(false);
+            }}
+          >
+            Credit
+          </button>
+        </span>
+        <span>
+          <button
+            onClick={() => {
+              setShowDebit(!showDebit);
+              setShowCredit(false);
+            }}
+          >
+            Debit
+          </button>
+        </span>
+      </p>
+      <div>
+        {showDebit && <CreateDebt type="debit" customer={c} />}
+        {showCredit && <CreateDebt type="credit" customer={c} />}
+      </div>
     </div>
   );
 }
