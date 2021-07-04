@@ -1,16 +1,15 @@
 import { getSession } from "@auth0/nextjs-auth0";
-import { connectToDatabase } from "./../utils/db";
 import { useEffect } from "react";
 import Link from "next/link";
 
 import Monthly from "../components/monthly";
 import Tabular from "./../components/tabular";
 import { useData } from "./../contexts/dataContext";
-export default function Account({ user, docs }) {
-  const context = useData();
-  useEffect(() => {
-    console.log(context);
-  }, []);
+
+export default function Account({ user }) {
+  const {
+    docs: [{ overview, byCategory, dailySummary }],
+  } = useData();
 
   return (
     <div className="account">
@@ -41,78 +40,8 @@ export default function Account({ user, docs }) {
 
 export async function getServerSideProps(ctx) {
   const { user } = getSession(ctx.req, ctx.res);
-  const { db } = await connectToDatabase();
-  const pastThirtyDays = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth() - 1,
-    new Date().getDate()
-  ).toISOString();
-
-  const docs = await db
-    .collection("transactions")
-    .aggregate([
-      {
-        $match: {
-          creator: user.sub,
-        },
-      },
-      {
-        $facet: {
-          monthly: [
-            {
-              $match: {
-                date: {
-                  $gte: pastThirtyDays,
-                },
-              },
-            },
-            {
-              $group: {
-                _id: "$type",
-                total: { $sum: "$amount" },
-              },
-            },
-          ],
-          dailySummary: [
-            {
-              $match: {
-                date: {
-                  $gt: new Date(new Date(Date.now() - 86400000)).toISOString(),
-                },
-              },
-            },
-            {
-              $group: {
-                _id: "$type",
-                total: { $sum: "$amount" },
-              },
-            },
-          ],
-          dailyItems: [
-            {
-              $match: {
-                date: {
-                  $gt: new Date(new Date(Date.now() - 86400000)).toISOString(),
-                },
-              },
-            },
-          ],
-          byCategoy: [
-            {
-              $group: {
-                _id: "$category",
-                total: { $sum: "$amount" },
-              },
-            },
-          ],
-        },
-      },
-    ])
-    .toArray();
-
   return {
     props: {
-      docs: JSON.parse(JSON.stringify(docs)),
       user,
     },
   };

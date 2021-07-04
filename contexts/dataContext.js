@@ -5,7 +5,7 @@ const dataContext = createContext();
 
 export function DataProvider({ children }) {
   const [update, setUpdate] = useState();
-  const [docs, setDocs] = useState();
+  const [docs, setDocs] = useState([{}]);
 
   useEffect(() => {
     axios

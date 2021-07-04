@@ -12,14 +12,13 @@ export default function In() {
     axios
       .post("/api/transactions", {
         ...state,
-        date: new Date().toISOString(),
+        date: Date.now(),
         sum: parseFloat(state.amount),
         type: "in",
         quantity: parseInt(state.quantity),
         amount: parseFloat(state.amount) * parseInt(state.quantity),
       })
       .then(() => {
-        console.log("this is working son");
         context.setUpdate((s) => ({ ...s, type: "refresh" }));
         router.push("/account");
       })

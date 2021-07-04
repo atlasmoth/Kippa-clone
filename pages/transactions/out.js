@@ -98,7 +98,7 @@ export default function Create() {
     axios
       .post("/api/transactions", {
         ...state,
-        date: new Date(state.date + ":" + state.time).toISOString(),
+        date: new Date().getTime(),
         amount: parseFloat(state.sum),
         type: "out",
       })
@@ -150,21 +150,7 @@ export default function Create() {
               </optgroup>
             </select>
           </div>
-          <div>
-            <p>Date</p>
-            <span>
-              <input
-                type="date"
-                name="date"
-                id="date"
-                min={new Date().toISOString().split("T")[0]}
-                required
-              />
-            </span>
-            <span>
-              <input type="time" name="time" id="time" />
-            </span>
-          </div>
+
           <div>
             <label htmlFor="cash">
               <input type="radio" name="method" value="cash" defaultChecked />

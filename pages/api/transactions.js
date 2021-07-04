@@ -7,11 +7,6 @@ const handler = nc();
 async function getTransactions(req, res) {
   const { user } = getSession(req, res);
   const { db } = await connectToDatabase();
-  const pastThirtyDays = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth() - 1,
-    new Date().getDate()
-  ).toISOString();
 
   const docs = await db
     .collection("transactions")
@@ -23,14 +18,7 @@ async function getTransactions(req, res) {
       },
       {
         $facet: {
-          monthly: [
-            {
-              $match: {
-                date: {
-                  $gte: pastThirtyDays,
-                },
-              },
-            },
+          overview: [
             {
               $group: {
                 _id: "$type",
@@ -42,7 +30,7 @@ async function getTransactions(req, res) {
             {
               $match: {
                 date: {
-                  $gt: new Date(new Date(Date.now() - 86400000)).toISOString(),
+                  $gte: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
                 },
               },
             },
@@ -50,19 +38,11 @@ async function getTransactions(req, res) {
               $group: {
                 _id: "$type",
                 total: { $sum: "$amount" },
+                items: { $push: "$$ROOT" },
               },
             },
           ],
-          dailyItems: [
-            {
-              $match: {
-                date: {
-                  $gt: new Date(new Date(Date.now() - 86400000)).toISOString(),
-                },
-              },
-            },
-          ],
-          byCategoy: [
+          byCategory: [
             {
               $group: {
                 _id: "$category",
