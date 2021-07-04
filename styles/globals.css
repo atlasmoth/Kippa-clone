@@ -29,9 +29,7 @@ input {
   font: inherit;
   outline: none;
 }
-form {
-  background-color: red;
-}
+
 form .label {
   display: block;
 }
