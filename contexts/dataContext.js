@@ -8,6 +8,7 @@ export function DataProvider({ children }) {
   const [docs, setDocs] = useState([{}]);
 
   useEffect(() => {
+    console.log("this is updating son");
     axios
       .get("/api/transactions")
       .then(({ data: { docs } }) => {

@@ -14,7 +14,7 @@ export default function Account({ user }) {
     <div className="account">
       <div className="container">
         Welcome {user.name}! <a href="/api/auth/logout">Logout</a>
-        <Monthly />
+        <Monthly categories={byCategory} />
         <div className="buttons">
           <span>
             <Link href="/transactions/out">
