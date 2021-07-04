@@ -1,14 +1,11 @@
 import { getSession } from "@auth0/nextjs-auth0";
 import Link from "next/link";
-
+import { connectToDatabase } from "./../utils/db";
 import Monthly from "../components/monthly";
 import Tabular from "./../components/tabular";
-import { useData } from "./../contexts/dataContext";
 
-export default function Account({ user }) {
-  const {
-    docs: [{ overview, byCategory, dailySummary }],
-  } = useData();
+export default function Account({ user, docs }) {
+  const [{ overview, dailySummary, byCategory }] = docs;
 
   return (
     <div className="account">
@@ -39,9 +36,58 @@ export default function Account({ user }) {
 
 export async function getServerSideProps(ctx) {
   const { user } = getSession(ctx.req, ctx.res);
+  const { db } = await connectToDatabase();
+  const docs = await db
+    .collection("transactions")
+    .aggregate([
+      {
+        $match: {
+          creator: user.sub,
+        },
+      },
+      {
+        $facet: {
+          overview: [
+            {
+              $group: {
+                _id: "$type",
+                total: { $sum: "$amount" },
+              },
+            },
+          ],
+          dailySummary: [
+            {
+              $match: {
+                date: {
+                  $gte: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
+                },
+              },
+            },
+            {
+              $group: {
+                _id: "$type",
+                total: { $sum: "$amount" },
+                items: { $push: "$$ROOT" },
+              },
+            },
+          ],
+          byCategory: [
+            {
+              $group: {
+                _id: "$category",
+                total: { $sum: "$amount" },
+              },
+            },
+          ],
+        },
+      },
+    ])
+    .toArray();
+
   return {
     props: {
       user,
+      docs: JSON.parse(JSON.stringify(docs)),
     },
   };
 }
