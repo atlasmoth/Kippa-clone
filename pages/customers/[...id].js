@@ -9,6 +9,7 @@ export default function Customer({ id }) {
       .get(`/api/debt?id=${id}`)
       .then(({ data: { docs } }) => {
         console.log(docs);
+        setUniqueDebt(docs);
       })
       .catch(console.log);
   }, [update]);
