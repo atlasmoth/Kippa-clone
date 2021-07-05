@@ -19,8 +19,8 @@ async function getCustomers(req, res) {
       {
         $lookup: {
           from: "debt",
-          localField: "userId", // field in the orders collection
-          foreignField: "customer", // field in the items collection
+          localField: "userId",
+          foreignField: "customer",
           as: "debt",
         },
       },
