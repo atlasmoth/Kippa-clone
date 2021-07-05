@@ -3,27 +3,41 @@ import Link from "next/link";
 import { connectToDatabase } from "./../utils/db";
 import Monthly from "../components/monthly";
 import Tabular from "./../components/tabular";
+import Navbar from "../components/navbar";
 
 export default function Account({ user, docs }) {
   const [{ overview, dailySummary, byCategory }] = docs;
+  console.log(dailySummary);
 
   return (
     <div className="account">
+      <Navbar />
       <div className="container">
-        Welcome {user.name}! <a href="/api/auth/logout">Logout</a>
+        <div className="buttons">
+          <span>
+            <p>
+              Total Balance
+              {overview.reduce((a, doc) => {
+                if (doc._id === "in") a = a + doc.total;
+                if (doc._id === "out") a = a - doc.total;
+                return a;
+              }, 0)}
+            </p>
+          </span>
+        </div>
         <Monthly categories={byCategory} />
         <div className="buttons">
           <span>
             <Link href="/transactions/out">
               <a>
-                <button>Money Out</button>
+                <button className="btn">Money Out</button>
               </a>
             </Link>
           </span>
           <span>
             <Link href="/transactions/in">
               <a>
-                <button>Money In</button>
+                <button className="btn">Money In</button>
               </a>
             </Link>
           </span>

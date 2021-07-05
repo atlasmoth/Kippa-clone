@@ -4,11 +4,18 @@ import axios from "axios";
 export default function Customer({ id }) {
   const [uniqueDebt, setUniqueDebt] = useState();
   const [update, setUpdate] = useState({});
+
   useEffect(() => {
     axios
       .get(`/api/debt?id=${id}`)
       .then(({ data: { docs } }) => {
-        setUniqueDebt(docs);
+        setUniqueDebt(
+          docs
+            .filter((d) => d._id === "in" || d._id === "out")
+            .reduce((acc, curr) => {
+              return [...acc, ...curr.items];
+            }, [])
+        );
       })
       .catch(console.log);
   }, [update]);
@@ -22,18 +29,25 @@ export default function Customer({ id }) {
       })
       .then(async () => {
         await axios.put("/api/debt?id=" + objId, { ...state });
+        setUpdate((u) => ({ ...u, type: "get" }));
       })
       .catch(console.log);
   }
   return (
     <div className="customer">
       {uniqueDebt &&
-        uniqueDebt[0].items.map((u) => (
+        uniqueDebt.map((u) => (
           <div key={u._id}>
-            <p>{u.type}</p>
-            <p>{u.item}</p>
-            <p>{u.total}</p>
-            <p>Due in {new Date(u.date).toDateString()}</p>
+            <p>
+              <span>{u.item} </span>
+              <span
+                style={{ color: `${u.type === "in" ? "green" : "tomato"}` }}
+              >
+                &#x20A6; {u.amount}
+              </span>
+            </p>
+
+            <p>Due on {new Date(u.date).toDateString()}</p>
             <button onClick={() => resolve(u)}>Resolve</button>
           </div>
         ))}
