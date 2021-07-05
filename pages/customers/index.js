@@ -8,12 +8,23 @@ export default function Customers() {
   const [customers, setCustomers] = useState([]);
   const [update, setUpdate] = useState({});
   const [phone, setPhone] = useState();
+  const [balance, setbalance] = useState(0);
 
   useEffect(() => {
     axios
       .get("/api/customers")
       .then(({ data: { docs } }) => {
-        console.log(docs);
+        const total = docs.reduce((acc, { debt }) => {
+          return (
+            acc +
+            debt.reduce((a, doc) => {
+              if (doc.type === "in") a = a + doc.amount;
+              if (doc.type === "out") a = a - doc.amount;
+              return a;
+            }, 0)
+          );
+        }, 0);
+        setbalance(total);
         setCustomers(docs);
       })
       .catch(console.log);
@@ -33,9 +44,10 @@ export default function Customers() {
     <div className="customers">
       <div className="container">
         <h3>Customers</h3>
+        <p>Balance &#x20A6; {balance}</p>
         <div className="customer-list">
           {customers.map((c) => (
-            <CustomerItem c={c} key={c._id} />
+            <CustomerItem c={c} key={c._id} updateState={setUpdate} />
           ))}
         </div>
         <div className="create-customer">
@@ -67,7 +79,7 @@ export default function Customers() {
   );
 }
 
-function CreateDebt({ customer }) {
+function CreateDebt({ customer, setUpdate }) {
   function handleDebt(e) {
     e.preventDefault();
     const state = Object.fromEntries(new FormData(e.target));
@@ -80,7 +92,7 @@ function CreateDebt({ customer }) {
         date: new Date(new Date(state.due).setHours(0, 0, 0, 0)).getTime(),
       })
       .then(({ data: { doc } }) => {
-        console.log(doc);
+        setUpdate((u) => ({ ...u, type: "get" }));
       })
       .catch(console.log);
   }
@@ -97,10 +109,10 @@ function CreateDebt({ customer }) {
           </select>
         </div>
         <div>
-          <label className="label" htmlFor="items">
+          <label className="label" htmlFor="item">
             Items Bought
           </label>
-          <input type="text" name="items" id="items" />
+          <input type="text" name="item" id="items" />
         </div>
         <div>
           <label className="label" htmlFor="amount">
@@ -122,7 +134,7 @@ function CreateDebt({ customer }) {
   );
 }
 
-function CustomerItem({ c }) {
+function CustomerItem({ c, updateState }) {
   const [showTransaction, setShowTransaction] = useState(false);
 
   return (
@@ -142,7 +154,9 @@ function CustomerItem({ c }) {
           </button>
         </span>
       </p>
-      <div>{showTransaction && <CreateDebt customer={c} />}</div>
+      <div>
+        {showTransaction && <CreateDebt customer={c} setUpdate={updateState} />}
+      </div>
     </div>
   );
 }

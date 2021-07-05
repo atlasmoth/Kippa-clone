@@ -1,11 +1,12 @@
 import { connectToDatabase } from "./../../utils/db";
 import { getSession } from "@auth0/nextjs-auth0";
 import nc from "next-connect";
+import { ObjectId } from "mongodb";
 
 const handler = nc({ attachParams: true });
 
 async function getCustomers(req, res) {
-  let query = {};
+  let query = { resolved: { $exists: false } };
   const { user } = getSession(req, res);
   const { db } = await connectToDatabase();
   const { id } = req.query;
@@ -30,6 +31,7 @@ async function getCustomers(req, res) {
       },
     ])
     .toArray();
+
   res.send({ success: true, docs });
 }
 
@@ -49,5 +51,22 @@ async function createDebt(req, res) {
 
   res.send();
 }
-handler.get(getCustomers).post(createDebt);
+async function updateDebt(req, res) {
+  try {
+    const { db } = await connectToDatabase();
+    const { id } = req.query;
+
+    await db
+      .collection("debt")
+      .updateOne(
+        { _id: ObjectId(id) },
+        { $set: { resolved: true, ...req.body } }
+      );
+    res.send({ success: true });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ success: false, message: error.message });
+  }
+}
+handler.get(getCustomers).post(createDebt).put(updateDebt);
 export default handler;
