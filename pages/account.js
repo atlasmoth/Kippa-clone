@@ -7,23 +7,32 @@ import Navbar from "../components/navbar";
 
 export default function Account({ user, docs }) {
   const [{ overview, dailySummary, byCategory }] = docs;
-  console.log(dailySummary);
 
   return (
     <div className="account">
       <Navbar />
       <div className="container">
         <div className="buttons">
-          <span>
-            <p>
-              Total Balance
-              {overview.reduce((a, doc) => {
+          <div>
+            Total Balance <br />
+            &#x20A6;{" "}
+            {overview.reduce((a, doc) => {
+              if (doc._id === "in") a = a + doc.total;
+              if (doc._id === "out") a = a - doc.total;
+              return a;
+            }, 0)}
+          </div>
+          <div>
+            <span>Daily Balance </span> <br />
+            <span>
+              &#x20A6;{" "}
+              {dailySummary.reduce((a, doc) => {
                 if (doc._id === "in") a = a + doc.total;
                 if (doc._id === "out") a = a - doc.total;
                 return a;
               }, 0)}
-            </p>
-          </span>
+            </span>
+          </div>
         </div>
         <Monthly categories={byCategory} />
         <div className="buttons">
@@ -42,7 +51,27 @@ export default function Account({ user, docs }) {
             </Link>
           </span>
         </div>
-        <Tabular />
+        <div className="overview">
+          <div>
+            <span>Date</span> <br />
+            <span>{new Date().toDateString()}</span>
+          </div>
+          <div>
+            <span>Cash in</span> <br />
+            <span>{dailySummary.find((d) => d._id === "in")?.total || 0}</span>
+          </div>
+          <div>
+            <span>Cash out</span> <br />
+            <span>{dailySummary.find((d) => d._id === "out")?.total || 0}</span>
+          </div>
+        </div>
+        <Tabular
+          data={dailySummary
+            .filter((d) => d._id === "in" || d._id === "out")
+            .reduce((acc, curr) => {
+              return [...acc, ...curr.items];
+            }, [])}
+        />
       </div>
     </div>
   );

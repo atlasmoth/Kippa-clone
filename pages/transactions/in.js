@@ -1,9 +1,7 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useData } from "./../../contexts/dataContext";
 
 export default function In() {
-  const context = useData();
   const router = useRouter();
   function createOut(e) {
     e.preventDefault();
@@ -19,7 +17,6 @@ export default function In() {
         amount: parseFloat(state.amount) * parseInt(state.quantity),
       })
       .then(() => {
-        context.setUpdate((s) => ({ ...s, type: "refresh" }));
         router.push("/account");
       })
       .catch(console.log);

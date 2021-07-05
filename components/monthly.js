@@ -12,7 +12,6 @@ export default function Monthly({ categories }) {
           labels: categories.map((c) => (c._id ? c._id : "misc")),
           datasets: [
             {
-              label: "Amount spent",
               data: categories.map((c) => Math.log10(c.total)),
               backgroundColor: Array.from(new Array(categories.length), () =>
                 genColor()
@@ -20,6 +19,14 @@ export default function Monthly({ categories }) {
               borderWidth: 1,
             },
           ],
+          options: {
+            legend: {
+              display: false,
+            },
+            tooltips: {
+              enabled: false,
+            },
+          },
         }}
       />
     </div>
