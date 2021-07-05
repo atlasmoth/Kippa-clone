@@ -13,6 +13,7 @@ export default function Customers() {
     axios
       .get("/api/customers")
       .then(({ data: { docs } }) => {
+        console.log(docs);
         setCustomers(docs);
       })
       .catch(console.log);
@@ -90,8 +91,8 @@ function CreateDebt({ customer }) {
           <label htmlFor="type" className="label"></label>
           <select name="type" id="type">
             <optgroup label="Choose Transaction type">
-              <option value="credit">Credit</option>
-              <option value="debit">Debit</option>
+              <option value="in">Credit</option>
+              <option value="out">Debit</option>
             </optgroup>
           </select>
         </div>

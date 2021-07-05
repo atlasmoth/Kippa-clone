@@ -33,7 +33,7 @@ async function getCustomers(req, res) {
   res.send({ success: true, docs });
 }
 
-async function createCustomer(req, res) {
+async function createDebt(req, res) {
   const { user } = getSession(req, res);
   try {
     const { db } = await connectToDatabase();
@@ -49,5 +49,5 @@ async function createCustomer(req, res) {
 
   res.send();
 }
-handler.get(getCustomers).post(createCustomer);
+handler.get(getCustomers).post(createDebt);
 export default handler;

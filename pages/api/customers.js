@@ -15,6 +15,15 @@ async function getCustomers(req, res) {
           creator: user.sub,
         },
       },
+      { $addFields: { userId: { $toString: "$_id" } } },
+      {
+        $lookup: {
+          from: "debt",
+          localField: "userId", // field in the orders collection
+          foreignField: "customer", // field in the items collection
+          as: "debt",
+        },
+      },
     ])
     .toArray();
   res.send({ success: true, docs });

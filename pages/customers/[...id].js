@@ -13,7 +13,7 @@ export default function Customer({ id }) {
       })
       .catch(console.log);
   }, [update]);
-  return <div className="customer"></div>;
+  return <div className="customer">{JSON.stringify(uniqueDebt)}</div>;
 }
 
 export async function getServerSideProps(ctx) {
