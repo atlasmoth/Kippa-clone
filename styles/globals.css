@@ -49,19 +49,25 @@ form .label {
   margin-bottom: 1rem;
 }
 button.btn {
-  background-color: rgb(240, 242, 243);
   font-size: 1.2rem;
   border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 5px;
-  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.2);
+  padding: 0.5rem 2rem;
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
+  background-color: #eee;
 }
 
 .item {
-  padding: 1rem 3rem;
+  padding: 1rem;
   box-shadow: 10px 10px 20px -20px rgba(0, 0, 0, 0.75);
   margin-bottom: 1rem;
   border-radius: 5px;
   display: flex;
+  justify-content: space-between;
+}
+.overview {
+  display: flex;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 5px;
   justify-content: space-between;
 }

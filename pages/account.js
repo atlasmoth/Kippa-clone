@@ -58,11 +58,15 @@ export default function Account({ user, docs }) {
           </div>
           <div>
             <span>Cash in</span> <br />
-            <span>{dailySummary.find((d) => d._id === "in")?.total || 0}</span>
+            <span>
+              &#x20A6;{dailySummary.find((d) => d._id === "in")?.total || 0}
+            </span>
           </div>
           <div>
             <span>Cash out</span> <br />
-            <span>{dailySummary.find((d) => d._id === "out")?.total || 0}</span>
+            <span>
+              &#x20A6;{dailySummary.find((d) => d._id === "out")?.total || 0}
+            </span>
           </div>
         </div>
         <Tabular
