@@ -17,6 +17,14 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import "date-fns";
+import Grid from "@material-ui/core/Grid";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 
 import { Button } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
@@ -103,22 +111,29 @@ export default function FolderList() {
 
 function CreateDebt({ customer, setUpdate, closeTransaction }) {
   const classes = useStyles();
+  const [selectedDate, setSelectedDate] = React.useState(
+    new Date("2014-08-18T21:11:54")
+  );
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
   function handleDebt(e) {
     e.preventDefault();
     const state = Object.fromEntries(new FormData(e.target));
-
-    axios
-      .post("/api/debt", {
-        ...state,
-        amount: parseFloat(state.amount),
-        customer: customer._id,
-        date: new Date(new Date(state.due).setHours(0, 0, 0, 0)).getTime(),
-      })
-      .then(({ data: { doc } }) => {
-        setUpdate((u) => ({ ...u, type: "get" }));
-        closeTransaction();
-      })
-      .catch(console.log);
+    console.log(state);
+    // axios
+    //   .post("/api/debt", {
+    //     ...state,
+    //     amount: parseFloat(state.amount),
+    //     customer: customer._id,
+    //     date: new Date(new Date(state.due).setHours(0, 0, 0, 0)).getTime(),
+    //   })
+    //   .then(({ data: { doc } }) => {
+    //     setUpdate((u) => ({ ...u, type: "get" }));
+    //     closeTransaction();
+    //   })
+    //   .catch(console.log);
   }
   return (
     <form onSubmit={handleDebt}>
@@ -130,7 +145,14 @@ function CreateDebt({ customer, setUpdate, closeTransaction }) {
             <option value="out">Debit</option>
           </optgroup>
         </select>
-      </div> */}
+      </div>
+      
+      <div>
+        <label className="label" htmlFor="due">
+          Due in
+        </label>
+        <input type="date" name="due" id="due" />
+      </div>*/}
       <FormControl className={classes.formControl}>
         <InputLabel id="demo-simple-select-helper-label">Type</InputLabel>
         <Select
@@ -156,12 +178,20 @@ function CreateDebt({ customer, setUpdate, closeTransaction }) {
         </label>
         <input type="number" name="amount" id="amount" />
       </div>
-      <div>
-        <label className="label" htmlFor="due">
-          Due in
-        </label>
-        <input type="date" name="due" id="due" />
-      </div>
+      <KeyboardDatePicker
+        disableToolbar
+        variant="inline"
+        format="MM/dd/yyyy"
+        margin="normal"
+        id="date-picker-inline"
+        label="Date picker inline"
+        value={selectedDate}
+        onChange={handleDateChange}
+        KeyboardButtonProps={{
+          "aria-label": "change date",
+        }}
+      />
+
       <div>
         <Button type="submit" variant="contained" color="primary">
           Save
