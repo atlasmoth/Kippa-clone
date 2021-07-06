@@ -8,6 +8,7 @@ import { connectToDatabase } from "./../utils/db";
 import { getSession } from "@auth0/nextjs-auth0";
 
 export default function Transaction({ docs }) {
+  const [transactions, setTransactions] = useState([]);
   const [state, setState] = useState([
     {
       startDate: new Date(),
@@ -18,8 +19,21 @@ export default function Transaction({ docs }) {
   useEffect(() => {
     const [{ startDate, endDate }] = state;
     // console.log(new Date(startDate));
-    console.log(new Date(startDate.toDateString()));
+    const most = new Date(
+      new Date(endDate.toDateString()).setHours(23, 59, 59, 59)
+    ).getTime();
+    const least = new Date(
+      new Date(startDate.toDateString()).setHours(0, 0, 0, 0)
+    ).getTime();
+
+    axios
+      .get(`/api/history?most=${most}&least=${least}`)
+      .then(({ data: { docs } }) => {
+        setTransactions(docs);
+      })
+      .catch(console.log);
   }, [state]);
+  console.log(transactions);
   return (
     <DateRangePicker
       onChange={(item) => setState([item.selection])}

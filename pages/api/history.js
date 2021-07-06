@@ -8,6 +8,7 @@ async function getHistory(req, res) {
   const { user } = getSession(req, res);
   const { db } = await connectToDatabase();
   const { least, most } = req.query;
+
   const docs = await db
     .collection("transactions")
     .aggregate([
@@ -18,6 +19,11 @@ async function getHistory(req, res) {
             $gte: Number(least),
             $lte: Number(most),
           },
+        },
+      },
+      {
+        $sort: {
+          date: -1,
         },
       },
     ])
