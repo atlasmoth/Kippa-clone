@@ -1,25 +1,19 @@
 import { useUser } from "@auth0/nextjs-auth0";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function Index() {
-  const { user, error, isLoading } = useUser();
+  const { user, isLoading } = useUser();
+
   const router = useRouter();
+  useEffect(() => {
+    if (!isLoading && !user) {
+      if (!user) router.push("/api/auth/login");
+    }
+    if (!isLoading && user) {
+      if (user) router.push("/account");
+    }
+  }, [isLoading]);
 
-  if (!isLoading && !user) {
-    console.log("this is running son");
-  }
-
-  if (error) return <div>{error.message}</div>;
-
-  if (user) router.push("/account");
-
-  return <a href="/api/auth/login">Login</a>;
-}
-
-async function getServerSideProps() {
-  return {
-    props: {
-      user: null,
-    },
-  };
+  return null;
 }

@@ -54,6 +54,7 @@ button.btn {
   padding: 0.5rem 2rem;
   box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
   background-color: #eee;
+  margin-top: 0.5rem;
 }
 
 .item {
@@ -70,4 +71,24 @@ button.btn {
   margin-bottom: 1rem;
   border-radius: 5px;
   justify-content: space-between;
+}
+
+/* customrs */
+.container-header {
+  padding: 2rem;
+  text-align: center;
+}
+.customer-box {
+  display: flex;
+  justify-self: center;
+
+  flex-direction: column;
+}
+.customer-list {
+  padding: 1rem;
+}
+.customer-box [name] {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
 }

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Navbar from "../../components/navbar";
 
 export default function Customer({ id }) {
-  const [uniqueDebt, setUniqueDebt] = useState();
+  const [uniqueDebt, setUniqueDebt] = useState([]);
   const [update, setUpdate] = useState({});
 
   useEffect(() => {
@@ -19,6 +20,7 @@ export default function Customer({ id }) {
       })
       .catch(console.log);
   }, [update]);
+
   function resolve(state) {
     const objId = state._id;
     delete state._id;
@@ -35,22 +37,44 @@ export default function Customer({ id }) {
   }
   return (
     <div className="customer">
-      {uniqueDebt &&
-        uniqueDebt.map((u) => (
-          <div key={u._id}>
-            <p>
-              <span>{u.item} </span>
-              <span
-                style={{ color: `${u.type === "in" ? "green" : "tomato"}` }}
-              >
-                &#x20A6; {u.amount}
-              </span>
-            </p>
+      <Navbar />
+      <div className="container">
+        <div className="customer-box">
+          <div>
+            <div className="container-header">
+              <h3>Customer Name</h3>
+              <p>
+                Total &#x20A6;{" "}
+                {uniqueDebt.reduce((acc, curr) => {
+                  return curr.type === "in"
+                    ? (acc += curr.amount)
+                    : (acc -= curr.amount);
+                }, 0)}
+              </p>
+            </div>
+            {uniqueDebt.length > 0 &&
+              uniqueDebt.map((u) => (
+                <div key={u._id}>
+                  <p>
+                    <span>{u.item} </span>
+                    <span
+                      style={{
+                        color: `${u.type === "in" ? "green" : "tomato"}`,
+                      }}
+                    >
+                      &#x20A6; {u.amount}
+                    </span>
+                  </p>
 
-            <p>Due on {new Date(u.date).toDateString()}</p>
-            <button onClick={() => resolve(u)}>Resolve</button>
+                  <p>Due on {new Date(u.date).toDateString()}</p>
+                  <button className="btn" onClick={() => resolve(u)}>
+                    Resolve
+                  </button>
+                </div>
+              ))}
           </div>
-        ))}
+        </div>
+      </div>
     </div>
   );
 }

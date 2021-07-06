@@ -5,6 +5,7 @@ export default function Monthly({ categories }) {
     scale: {
       ticks: { beginAtZero: true },
     },
+    maintainAspectRatio: false,
   };
   return (
     <div className="monthly">
@@ -19,8 +20,8 @@ export default function Monthly({ categories }) {
               borderWidth: 1,
             },
           ],
-          options,
         }}
+        // options={{ maintainAspectRatio: false }}
       />
     </div>
   );

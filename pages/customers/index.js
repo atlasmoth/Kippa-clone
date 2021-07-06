@@ -3,6 +3,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import axios from "axios";
 import Link from "next/link";
+import Navbar from "../../components/navbar";
 
 export default function Customers() {
   const [customers, setCustomers] = useState([]);
@@ -42,44 +43,51 @@ export default function Customers() {
   }
   return (
     <div className="customers">
+      <Navbar />
       <div className="container">
-        <h3>Customers</h3>
-        <p>Balance &#x20A6; {balance}</p>
-        <div className="customer-list">
-          {customers.map((c) => (
-            <CustomerItem c={c} key={c._id} updateState={setUpdate} />
-          ))}
-        </div>
-        <div className="create-customer">
-          <p>Create New Customer</p>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label className="label" htmlFor="name">
-                Enter customer's name
-              </label>
-              <input type="text" name="name" id="name" />
-            </div>
-            <div>
-              <div className="label">Mobile Number</div>
-              <PhoneInput
-                country={"us"}
-                value={phone}
-                onChange={(e) => setPhone(e)}
-              />
-            </div>
-            <div>
-              <span>
-                <button type="submit">Save</button>
-              </span>
-            </div>
-          </form>
+        <div className="customer-box">
+          <div className="container-header">
+            <h3>Customers</h3>
+            <p>Total &#x20A6; {balance}</p>
+          </div>
+          <div className="customer-list">
+            {customers.map((c) => (
+              <CustomerItem c={c} key={c._id} updateState={setUpdate} />
+            ))}
+          </div>
+          <div className="create-customer">
+            <p>Create New Customer</p>
+            <form onSubmit={handleSubmit}>
+              <div>
+                <label className="label" htmlFor="name">
+                  Enter customer's name
+                </label>
+                <input type="text" name="name" id="name" />
+              </div>
+              <div>
+                <div className="label">Mobile Number</div>
+                <PhoneInput
+                  country={"us"}
+                  value={phone}
+                  onChange={(e) => setPhone(e)}
+                />
+              </div>
+              <div>
+                <span>
+                  <button className="btn" type="submit">
+                    Save
+                  </button>
+                </span>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function CreateDebt({ customer, setUpdate }) {
+function CreateDebt({ customer, setUpdate, closeTransaction }) {
   function handleDebt(e) {
     e.preventDefault();
     const state = Object.fromEntries(new FormData(e.target));
@@ -93,6 +101,7 @@ function CreateDebt({ customer, setUpdate }) {
       })
       .then(({ data: { doc } }) => {
         setUpdate((u) => ({ ...u, type: "get" }));
+        closeTransaction();
       })
       .catch(console.log);
   }
@@ -127,7 +136,9 @@ function CreateDebt({ customer, setUpdate }) {
           <input type="date" name="due" id="due" />
         </div>
         <div>
-          <button type="submit">Save</button>
+          <button className="btn" type="submit">
+            Save
+          </button>
         </div>
       </form>
     </div>
@@ -149,13 +160,22 @@ function CustomerItem({ c, updateState }) {
       </p>
       <p>
         <span>
-          <button onClick={() => setShowTransaction(!showTransaction)}>
-            Create Transaction
+          <button
+            className="btn"
+            onClick={() => setShowTransaction(!showTransaction)}
+          >
+            Record Debt
           </button>
         </span>
       </p>
       <div>
-        {showTransaction && <CreateDebt customer={c} setUpdate={updateState} />}
+        {showTransaction && (
+          <CreateDebt
+            customer={c}
+            setUpdate={updateState}
+            closeTransaction={() => setShowTransaction(!showTransaction)}
+          />
+        )}
       </div>
     </div>
   );

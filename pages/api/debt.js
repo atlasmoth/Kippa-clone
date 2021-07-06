@@ -6,7 +6,7 @@ import { ObjectId } from "mongodb";
 const handler = nc({ attachParams: true });
 
 async function getCustomers(req, res) {
-  let query = { resolved: { $exists: false } };
+  let query = {};
   const { user } = getSession(req, res);
   const { db } = await connectToDatabase();
   const { id } = req.query;
@@ -56,12 +56,7 @@ async function updateDebt(req, res) {
     const { db } = await connectToDatabase();
     const { id } = req.query;
 
-    await db
-      .collection("debt")
-      .updateOne(
-        { _id: ObjectId(id) },
-        { $set: { resolved: true, ...req.body } }
-      );
+    await db.collection("debt").deleteOne({ _id: ObjectId(id) });
     res.send({ success: true });
   } catch (error) {
     console.log(error);
