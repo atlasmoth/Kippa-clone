@@ -18,7 +18,6 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import "date-fns";
-import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
@@ -27,6 +26,8 @@ import {
 } from "@material-ui/pickers";
 
 import { Button } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
@@ -45,6 +46,7 @@ export default function FolderList() {
   function handleSubmit(e) {
     e.preventDefault();
     const state = Object.fromEntries(new FormData(e.target));
+
     axios
       .post("/api/customers", { ...state, phone })
       .then(() => {
@@ -81,14 +83,14 @@ export default function FolderList() {
           <CustomerItem c={c} key={c._id} updateState={setUpdate} />
         ))}
       </List>
-      <p>Create New Customer</p>
+      <h3>Create New Customer</h3>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label className="label" htmlFor="name">
-            Enter customer's name
-          </label>
-          <input type="text" name="name" id="name" />
-        </div>
+        <TextField
+          id="standard-uncontrolled"
+          label="User's Name"
+          defaultValue=""
+          name="name"
+        />
         <div>
           <div className="label">Mobile Number</div>
           <PhoneInput
@@ -98,11 +100,9 @@ export default function FolderList() {
           />
         </div>
         <div>
-          <span>
-            <button className="btn" type="submit">
-              Save
-            </button>
-          </span>
+          <Button type="submit" variant="contained" color="primary">
+            Save
+          </Button>
         </div>
       </form>
     </Layout>
@@ -111,73 +111,68 @@ export default function FolderList() {
 
 function CreateDebt({ customer, setUpdate, closeTransaction }) {
   const classes = useStyles();
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [item, setItem] = useState("");
+  const [amount, setAmount] = useState(1);
+  const [selectVal, setSelectVal] = useState("in");
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
   function handleDebt(e) {
     e.preventDefault();
-    const state = Object.fromEntries(new FormData(e.target));
-    console.log(state);
-    // axios
-    //   .post("/api/debt", {
-    //     ...state,
-    //     amount: parseFloat(state.amount),
-    //     customer: customer._id,
-    //     date: new Date(new Date(state.due).setHours(0, 0, 0, 0)).getTime(),
-    //   })
-    //   .then(({ data: { doc } }) => {
-    //     setUpdate((u) => ({ ...u, type: "get" }));
-    //     closeTransaction();
-    //   })
-    //   .catch(console.log);
+    console.log({ selectedDate, item, amount, selectVal });
+
+    axios
+      .post("/api/debt", {
+        type: selectVal,
+        item,
+        amount: parseFloat(amount),
+        customer: customer._id,
+        date: new Date(new Date(selectedDate).setHours(0, 0, 0, 0)).getTime(),
+      })
+      .then(({ data: { doc } }) => {
+        console.log(doc);
+        setUpdate((u) => ({ ...u, type: "get" }));
+        closeTransaction();
+      })
+      .catch(console.log);
   }
   return (
     <form onSubmit={handleDebt}>
-      {/* <div>
-        <label htmlFor="type" className="label"></label>
-        <select name="type" id="type">
-          <optgroup label="Choose Transaction type">
-            <option value="in">Credit</option>
-            <option value="out">Debit</option>
-          </optgroup>
-        </select>
-      </div>
-      
-      <div>
-        <label className="label" htmlFor="due">
-          Due in
-        </label>
-        <input type="date" name="due" id="due" />
-      </div>*/}
       <FormControl className={classes.formControl}>
         <InputLabel id="demo-simple-select-helper-label">Type</InputLabel>
         <Select
           labelId="demo-simple-select-helper-label"
           id="demo-simple-select-helper"
-          // value={age}
-          // onChange={handleChange}
+          value={selectVal}
+          onChange={(e) => setSelectVal(e.target.value)}
         >
           <MenuItem value="in">Credit</MenuItem>
           <MenuItem value="out">Debit</MenuItem>
         </Select>
         <FormHelperText>Select type of transaction</FormHelperText>
       </FormControl>
-      <div>
-        <label className="label" htmlFor="item">
-          Items Bought
-        </label>
-        <input type="text" name="item" id="items" />
-      </div>
-      <div>
-        <label className="label" htmlFor="amount">
-          Amount
-        </label>
-        <input type="number" name="amount" id="amount" />
-      </div>
+      <br />
+      <TextField
+        id="standard-basic"
+        label="Items Bought"
+        onChange={(e) => setItem(e.target.value)}
+        value={item}
+      />{" "}
+      <br />
+      <TextField
+        id="standard-number"
+        label="Amount"
+        min="1"
+        type="number"
+        InputLabelProps={{
+          shrink: true,
+        }}
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+      />{" "}
+      <br />
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardDatePicker
           disableToolbar
@@ -185,7 +180,7 @@ function CreateDebt({ customer, setUpdate, closeTransaction }) {
           format="MM/dd/yyyy"
           margin="normal"
           id="date-picker-inline"
-          label="Date picker inline"
+          label="Select Due Date"
           value={selectedDate}
           onChange={handleDateChange}
           KeyboardButtonProps={{
@@ -193,7 +188,6 @@ function CreateDebt({ customer, setUpdate, closeTransaction }) {
           }}
         />
       </MuiPickersUtilsProvider>
-
       <div>
         <Button type="submit" variant="contained" color="primary">
           Save
