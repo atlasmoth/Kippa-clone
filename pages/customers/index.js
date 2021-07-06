@@ -178,19 +178,21 @@ function CreateDebt({ customer, setUpdate, closeTransaction }) {
         </label>
         <input type="number" name="amount" id="amount" />
       </div>
-      <KeyboardDatePicker
-        disableToolbar
-        variant="inline"
-        format="MM/dd/yyyy"
-        margin="normal"
-        id="date-picker-inline"
-        label="Date picker inline"
-        value={selectedDate}
-        onChange={handleDateChange}
-        KeyboardButtonProps={{
-          "aria-label": "change date",
-        }}
-      />
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <KeyboardDatePicker
+          disableToolbar
+          variant="inline"
+          format="MM/dd/yyyy"
+          margin="normal"
+          id="date-picker-inline"
+          label="Date picker inline"
+          value={selectedDate}
+          onChange={handleDateChange}
+          KeyboardButtonProps={{
+            "aria-label": "change date",
+          }}
+        />
+      </MuiPickersUtilsProvider>
 
       <div>
         <Button type="submit" variant="contained" color="primary">
