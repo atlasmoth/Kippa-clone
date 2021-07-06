@@ -1,12 +1,6 @@
 import { Radar } from "react-chartjs-2";
 
 export default function Monthly({ categories }) {
-  const options = {
-    scale: {
-      ticks: { beginAtZero: true },
-    },
-    maintainAspectRatio: false,
-  };
   return (
     <div className="monthly">
       <Radar

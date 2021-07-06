@@ -3,14 +3,47 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import axios from "axios";
 import Link from "next/link";
-import Navbar from "../../components/navbar";
+import Layout from "./../../components/Layout";
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+import ImageIcon from "@material-ui/icons/Image";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 
-export default function Customers() {
+import { Button } from "@material-ui/core";
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+}));
+
+export default function FolderList() {
   const [customers, setCustomers] = useState([]);
   const [update, setUpdate] = useState({});
   const [phone, setPhone] = useState();
   const [balance, setbalance] = useState(0);
-
+  function handleSubmit(e) {
+    e.preventDefault();
+    const state = Object.fromEntries(new FormData(e.target));
+    axios
+      .post("/api/customers", { ...state, phone })
+      .then(() => {
+        setUpdate((u) => ({ ...u, type: "get" }));
+      })
+      .catch(console.log);
+  }
   useEffect(() => {
     axios
       .get("/api/customers")
@@ -31,63 +64,45 @@ export default function Customers() {
       .catch(console.log);
   }, [update]);
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    const state = Object.fromEntries(new FormData(e.target));
-    axios
-      .post("/api/customers", { ...state, phone })
-      .then(() => {
-        setUpdate((u) => ({ ...u, type: "get" }));
-      })
-      .catch(console.log);
-  }
   return (
-    <div className="customers">
-      <Navbar />
-      <div className="container">
-        <div className="customer-box">
-          <div className="container-header">
-            <h3>Customers</h3>
-            <p>Total &#x20A6; {balance}</p>
-          </div>
-          <div className="customer-list">
-            {customers.map((c) => (
-              <CustomerItem c={c} key={c._id} updateState={setUpdate} />
-            ))}
-          </div>
-          <div className="create-customer">
-            <p>Create New Customer</p>
-            <form onSubmit={handleSubmit}>
-              <div>
-                <label className="label" htmlFor="name">
-                  Enter customer's name
-                </label>
-                <input type="text" name="name" id="name" />
-              </div>
-              <div>
-                <div className="label">Mobile Number</div>
-                <PhoneInput
-                  country={"us"}
-                  value={phone}
-                  onChange={(e) => setPhone(e)}
-                />
-              </div>
-              <div>
-                <span>
-                  <button className="btn" type="submit">
-                    Save
-                  </button>
-                </span>
-              </div>
-            </form>
-          </div>
+    <Layout>
+      <h3>Customers</h3>
+      <p>Total &#x20A6; {balance}</p>
+      <List>
+        {customers.map((c) => (
+          <CustomerItem c={c} key={c._id} updateState={setUpdate} />
+        ))}
+      </List>
+      <p>Create New Customer</p>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label className="label" htmlFor="name">
+            Enter customer's name
+          </label>
+          <input type="text" name="name" id="name" />
         </div>
-      </div>
-    </div>
+        <div>
+          <div className="label">Mobile Number</div>
+          <PhoneInput
+            country={"us"}
+            value={phone}
+            onChange={(e) => setPhone(e)}
+          />
+        </div>
+        <div>
+          <span>
+            <button className="btn" type="submit">
+              Save
+            </button>
+          </span>
+        </div>
+      </form>
+    </Layout>
   );
 }
 
 function CreateDebt({ customer, setUpdate, closeTransaction }) {
+  const classes = useStyles();
   function handleDebt(e) {
     e.preventDefault();
     const state = Object.fromEntries(new FormData(e.target));
@@ -106,42 +121,53 @@ function CreateDebt({ customer, setUpdate, closeTransaction }) {
       .catch(console.log);
   }
   return (
-    <div className="debt">
-      <form onSubmit={handleDebt}>
-        <div>
-          <label htmlFor="type" className="label"></label>
-          <select name="type" id="type">
-            <optgroup label="Choose Transaction type">
-              <option value="in">Credit</option>
-              <option value="out">Debit</option>
-            </optgroup>
-          </select>
-        </div>
-        <div>
-          <label className="label" htmlFor="item">
-            Items Bought
-          </label>
-          <input type="text" name="item" id="items" />
-        </div>
-        <div>
-          <label className="label" htmlFor="amount">
-            Amount
-          </label>
-          <input type="number" name="amount" id="amount" />
-        </div>
-        <div>
-          <label className="label" htmlFor="due">
-            Due in
-          </label>
-          <input type="date" name="due" id="due" />
-        </div>
-        <div>
-          <button className="btn" type="submit">
-            Save
-          </button>
-        </div>
-      </form>
-    </div>
+    <form onSubmit={handleDebt}>
+      {/* <div>
+        <label htmlFor="type" className="label"></label>
+        <select name="type" id="type">
+          <optgroup label="Choose Transaction type">
+            <option value="in">Credit</option>
+            <option value="out">Debit</option>
+          </optgroup>
+        </select>
+      </div> */}
+      <FormControl className={classes.formControl}>
+        <InputLabel id="demo-simple-select-helper-label">Type</InputLabel>
+        <Select
+          labelId="demo-simple-select-helper-label"
+          id="demo-simple-select-helper"
+          // value={age}
+          // onChange={handleChange}
+        >
+          <MenuItem value="in">Credit</MenuItem>
+          <MenuItem value="out">Debit</MenuItem>
+        </Select>
+        <FormHelperText>Select type of transaction</FormHelperText>
+      </FormControl>
+      <div>
+        <label className="label" htmlFor="item">
+          Items Bought
+        </label>
+        <input type="text" name="item" id="items" />
+      </div>
+      <div>
+        <label className="label" htmlFor="amount">
+          Amount
+        </label>
+        <input type="number" name="amount" id="amount" />
+      </div>
+      <div>
+        <label className="label" htmlFor="due">
+          Due in
+        </label>
+        <input type="date" name="due" id="due" />
+      </div>
+      <div>
+        <Button type="submit" variant="contained" color="primary">
+          Save
+        </Button>
+      </div>
+    </form>
   );
 }
 
@@ -149,8 +175,35 @@ function CustomerItem({ c, updateState }) {
   const [showTransaction, setShowTransaction] = useState(false);
 
   return (
-    <div className="customer-item">
-      <p>
+    <>
+      <ListItem button>
+        <ListItemAvatar>
+          <Avatar>
+            <ImageIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary={c.name} secondary="Jan 9, 2014" />
+        <Button
+          onClick={() => setShowTransaction(!showTransaction)}
+          variant="contained"
+          color="primary"
+        >
+          Record Debt
+        </Button>
+      </ListItem>
+      {showTransaction && (
+        <CreateDebt
+          customer={c}
+          setUpdate={updateState}
+          closeTransaction={() => setShowTransaction(!showTransaction)}
+        />
+      )}
+    </>
+  );
+}
+
+{
+  /* <p>
         <Link href={`/customers/${c._id}`}>
           <a>
             <span>{c.name} - </span>
@@ -159,24 +212,9 @@ function CustomerItem({ c, updateState }) {
         </Link>
       </p>
       <p>
-        <span>
-          <button
-            className="btn"
-            onClick={() => setShowTransaction(!showTransaction)}
-          >
-            Record Debt
-          </button>
-        </span>
+        
       </p>
       <div>
-        {showTransaction && (
-          <CreateDebt
-            customer={c}
-            setUpdate={updateState}
-            closeTransaction={() => setShowTransaction(!showTransaction)}
-          />
-        )}
-      </div>
-    </div>
-  );
+        
+      </div> */
 }
