@@ -10,6 +10,7 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.4.2",
     "axios": "^0.21.1",
+    "date-fns": "^2.22.1",
     "mongodb": "^3.6.9",
     "next": "11.0.1",
     "next-connect": "^0.10.1",
