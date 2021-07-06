@@ -6,6 +6,7 @@ import { DateRangePicker } from "react-date-range";
 import { addDays } from "date-fns";
 import { connectToDatabase } from "./../utils/db";
 import { getSession } from "@auth0/nextjs-auth0";
+import Layout from "./../components/Layout";
 
 export default function Transaction({ docs }) {
   const [transactions, setTransactions] = useState([]);
@@ -35,17 +36,19 @@ export default function Transaction({ docs }) {
   }, [state]);
   console.log(transactions);
   return (
-    <DateRangePicker
-      onChange={(item) => setState([item.selection])}
-      showSelectionPreview={true}
-      moveRangeOnFirstSelection={false}
-      months={1}
-      ranges={state}
-      direction="vertical"
-      scroll={{ enabled: true }}
-      maxDate={new Date()}
-      minDate={docs?.date ? new Date(docs.date) : new Date()}
-    />
+    <Layout>
+      <DateRangePicker
+        onChange={(item) => setState([item.selection])}
+        showSelectionPreview={true}
+        moveRangeOnFirstSelection={false}
+        months={1}
+        ranges={state}
+        direction="vertical"
+        scroll={{ enabled: true }}
+        maxDate={new Date()}
+        minDate={docs?.date ? new Date(docs.date) : new Date()}
+      />
+    </Layout>
   );
 }
 

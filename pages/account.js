@@ -3,17 +3,33 @@ import Link from "next/link";
 import { connectToDatabase } from "./../utils/db";
 import Monthly from "../components/monthly";
 import Tabular from "./../components/tabular";
-import Navbar from "../components/navbar";
+import Layout from "./../components/Layout";
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+  },
+}));
 
 export default function Account({ user, docs }) {
   const [{ overview, dailySummary, byCategory }] = docs;
+  const classes = useStyles();
 
   return (
-    <div className="account">
-      <Navbar />
-      <div className="container">
-        <div className="buttons">
-          <div>
+    <Layout>
+      <div className={classes.root}>
+        <Grid container spacing={3}>
+          <Grid item xs={6}>
             Total Balance <br />
             &#x20A6;{" "}
             {overview.reduce((a, doc) => {
@@ -21,8 +37,8 @@ export default function Account({ user, docs }) {
               if (doc._id === "out") a = a - doc.total;
               return a;
             }, 0)}
-          </div>
-          <div>
+          </Grid>
+          <Grid item xs={6}>
             <span>Daily Balance </span> <br />
             <span>
               &#x20A6;{" "}
@@ -32,54 +48,74 @@ export default function Account({ user, docs }) {
                 return a;
               }, 0)}
             </span>
-          </div>
-        </div>
-        <Monthly categories={byCategory} />
-        <div className="buttons">
-          <span>
-            <Link href="/transactions/out">
-              <a>
-                <button className="btn">Money Out</button>
-              </a>
-            </Link>
-          </span>
-          <span>
-            <Link href="/transactions/in">
-              <a>
-                <button className="btn">Money In</button>
-              </a>
-            </Link>
-          </span>
-        </div>
-        <div className="overview">
-          <div>
-            <span>Date</span> <br />
-            <span>{new Date().toDateString()}</span>
-          </div>
-          <div>
-            <span>Cash in</span> <br />
-            <span>
-              &#x20A6;{dailySummary.find((d) => d._id === "in")?.total || 0}
-            </span>
-          </div>
-          <div>
-            <span>Cash out</span> <br />
-            <span>
-              &#x20A6;{dailySummary.find((d) => d._id === "out")?.total || 0}
-            </span>
-          </div>
-        </div>
-        <Tabular
-          data={dailySummary
-            .filter((d) => d._id === "in" || d._id === "out")
-            .reduce((acc, curr) => {
-              return [...acc, ...curr.items];
-            }, [])}
-        />
+          </Grid>
+          <Grid item xs={12}>
+            <Monthly categories={byCategory} />
+          </Grid>
+          <Grid item xs={6}>
+            <Button variant="outlined" color="secondary">
+              <Link href="/transactions/out">
+                <a>Money out</a>
+              </Link>
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button variant="outlined" color="primary">
+              <Link href="/transactions/in">
+                <a>Money in</a>
+              </Link>
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Tabular
+              data={dailySummary
+                .filter((d) => d._id === "in" || d._id === "out")
+                .reduce((acc, curr) => {
+                  return [...acc, ...curr.items];
+                }, [])}
+            />
+          </Grid>
+        </Grid>
       </div>
-    </div>
+    </Layout>
   );
 }
+
+// export default function Account() {
+
+//   return (
+//     <Layout>
+//       <div className="buttons">
+//         <div>
+
+//         </div>
+//         <div>
+
+//         </div>
+//       </div>
+
+//       <div className="overview">
+//         <div>
+//           <span>Date</span> <br />
+//           <span>{new Date().toDateString()}</span>
+//         </div>
+//         <div>
+//           <span>Cash in</span> <br />
+//           <span>
+//             &#x20A6;{dailySummary.find((d) => d._id === "in")?.total || 0}
+//           </span>
+//         </div>
+//         <div>
+//           <span>Cash out</span> <br />
+//           <span>
+//             &#x20A6;{dailySummary.find((d) => d._id === "out")?.total || 0}
+//           </span>
+//         </div>
+//       </div>
+
+//     </Layout>
+//   );
+// }
 
 export async function getServerSideProps(ctx) {
   const { user } = getSession(ctx.req, ctx.res);
