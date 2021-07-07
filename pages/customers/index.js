@@ -57,18 +57,15 @@ export default function FolderList() {
     axios
       .get("/api/customers")
       .then(({ data: { docs } }) => {
-        console.log(docs);
-        const total = docs.reduce((acc, { debt }) => {
-          return (
-            acc +
-            debt.reduce((a, doc) => {
-              if (doc.type === "in") a = a + doc.amount;
-              if (doc.type === "out") a = a - doc.amount;
-              return a;
-            }, 0)
-          );
-        }, 0);
-        setbalance(total);
+        let num = 0;
+        for (const { debt } of docs) {
+          debt.forEach((d) => {
+            if (d.type === "in") num += d.amount;
+            if (d.type === "out") num -= d.amount;
+          });
+        }
+
+        setbalance(num);
         setCustomers(docs);
       })
       .catch(console.log);

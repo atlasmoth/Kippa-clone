@@ -7,6 +7,7 @@ import { addDays } from "date-fns";
 import { connectToDatabase } from "./../utils/db";
 import { getSession } from "@auth0/nextjs-auth0";
 import Layout from "./../components/Layout";
+import HistoryTable from "./../components/historyTable";
 
 export default function Transaction({ docs }) {
   const [transactions, setTransactions] = useState([]);
@@ -34,7 +35,7 @@ export default function Transaction({ docs }) {
       })
       .catch(console.log);
   }, [state]);
-  console.log(transactions);
+
   return (
     <Layout>
       <DateRangePicker
@@ -48,6 +49,7 @@ export default function Transaction({ docs }) {
         maxDate={new Date()}
         minDate={docs?.date ? new Date(docs.date) : new Date()}
       />
+      <HistoryTable data={transactions} />
     </Layout>
   );
 }
