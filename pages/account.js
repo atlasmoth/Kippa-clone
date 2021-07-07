@@ -1,8 +1,7 @@
 import { getSession } from "@auth0/nextjs-auth0";
-import Link from "next/link";
 import { connectToDatabase } from "./../utils/db";
 import Monthly from "../components/monthly";
-
+import Mlink from "@material-ui/core/Link";
 import Layout from "./../components/Layout";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,6 +9,7 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Table from "./../components/table";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,7 +31,7 @@ export default function Account({ user, docs }) {
       <div>
         <Grid container spacing={3}>
           <Grid item xs={6}>
-            <Paper className={classes.paper}>
+            <Typography align="center">
               Total Balance <br />
               &#x20A6;{" "}
               {overview.reduce((a, doc) => {
@@ -39,10 +39,10 @@ export default function Account({ user, docs }) {
                 if (doc._id === "out") a = a - doc.total;
                 return a;
               }, 0)}
-            </Paper>
+            </Typography>
           </Grid>
           <Grid item xs={6}>
-            <Paper className={classes.paper}>
+            <Typography align="center">
               <span>Daily Balance </span> <br />
               <span>
                 &#x20A6;{" "}
@@ -52,28 +52,28 @@ export default function Account({ user, docs }) {
                   return a;
                 }, 0)}
               </span>
-            </Paper>
+            </Typography>
           </Grid>
           <Grid item xs={12}>
             <Monthly categories={byCategory} />
           </Grid>
           <Grid item xs={6}>
-            <Paper className={classes.paper}>
-              <Button variant="outlined" color="secondary">
-                <Link href="/transactions/out">
-                  <a>Money out</a>
-                </Link>
+            <Typography align="center">
+              <Button variant="contained" color="secondary">
+                <Mlink href="/transactions/out" color="inherit">
+                  Money Out
+                </Mlink>
               </Button>
-            </Paper>
+            </Typography>
           </Grid>
           <Grid item xs={6}>
-            <Paper className={classes.paper}>
-              <Button variant="outlined" color="primary">
-                <Link href="/transactions/in">
-                  <a>Money in</a>
-                </Link>
+            <Typography align="center">
+              <Button variant="contained" color="primary">
+                <Mlink href="/transactions/in" color="inherit">
+                  Money In
+                </Mlink>
               </Button>
-            </Paper>
+            </Typography>
           </Grid>
           <Grid item xs={12}></Grid>
           <Grid item xs={12}>
