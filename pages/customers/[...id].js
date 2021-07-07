@@ -11,6 +11,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import ShareIcon from "@material-ui/icons/Share";
+import { connectToDatabase } from "./../../utils/db";
+import { ObjectId } from "mongodb";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -94,9 +96,9 @@ export default function CheckboxList({ id }) {
                 secondary={`Due on ${new Date(u.date).toDateString()}`}
               />
               {u.type === "in" && (
-                <ListItemSecondaryAction>
+                <ListItemSecondaryAction onClick={() => shareLocal(u)}>
                   <IconButton edge="end" aria-label="comments">
-                    <ShareIcon onClick={() => shareLocal(u)} />
+                    <ShareIcon />
                   </IconButton>
                 </ListItemSecondaryAction>
               )}
@@ -109,7 +111,11 @@ export default function CheckboxList({ id }) {
 
 export async function getServerSideProps(ctx) {
   const { id } = ctx.query;
-
+  const { db } = await connectToDatabase();
+  const customer = await db
+    .collection("customer")
+    .findOne({ _id: ObjectId(id) });
+  console.log(customer);
   return {
     props: {
       id,

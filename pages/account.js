@@ -4,27 +4,13 @@ import Monthly from "../components/monthly";
 import Mlink from "@material-ui/core/Link";
 import Layout from "./../components/Layout";
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Table from "./../components/table";
 import Typography from "@material-ui/core/Typography";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  },
-}));
-
 export default function Account({ user, docs }) {
   const [{ overview, dailySummary, byCategory }] = docs;
-  const classes = useStyles();
 
   return (
     <Layout>
@@ -55,9 +41,7 @@ export default function Account({ user, docs }) {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography align="center">
-              <Monthly categories={byCategory} />
-            </Typography>
+            <Monthly categories={byCategory} />
           </Grid>
           <Grid item xs={6}>
             <Typography align="center">
