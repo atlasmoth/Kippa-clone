@@ -25,9 +25,12 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
-
+const useStyles = makeStyles({
+  table: {},
+});
 export default function CustomizedTables({ data }) {
-  console.log(data);
+  const classes = useStyles();
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="customized table">

@@ -1,0 +1,27 @@
+.rdrDateRangePickerWrapper {
+  display: flex !important;
+  flex-wrap: wrap;
+}
+.rdrCalendarWrapper {
+  flex-grow: 1;
+}
+.rdrMonth {
+  width: 100% !important;
+}
+
+.rdrDefinedRangesWrapper {
+  flex-basis: 1fr !important;
+}
+@media only screen and (max-width: 600px) {
+  .rdrDefinedRangesWrapper {
+    flex-grow: 1;
+  }
+  .rdrStaticRanges {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(100px, 1fr));
+  }
+  .rdrInputRanges {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}

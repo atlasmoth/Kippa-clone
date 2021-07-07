@@ -34,7 +34,7 @@ const useStyles = makeStyles({
 
 export default function CustomizedTables({ data, daily }) {
   const classes = useStyles();
-  console.log(data);
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="customized table">
