@@ -55,7 +55,9 @@ export default function Account({ user, docs }) {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Monthly categories={byCategory} />
+            <Typography align="center">
+              <Monthly categories={byCategory} />
+            </Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography align="center">
