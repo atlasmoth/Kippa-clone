@@ -17,7 +17,7 @@ export default function App({ categories }) {
     }))
     .sort((a, b) => b.total - a.total);
   return (
-    <ResponsiveContainer width="95%" height={400}>
+    <ResponsiveContainer width="100%" height={400}>
       <AreaChart
         width={500}
         height={400}
@@ -38,11 +38,3 @@ export default function App({ categories }) {
     </ResponsiveContainer>
   );
 }
-
-/*
-const data = categories.map((c) => ({
-    ...c,
-    _id: c._id ?? "misc",
-    total: Math.log10(c.total),
-  }));
-*/

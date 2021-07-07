@@ -1,5 +1,14 @@
 import axios from "axios";
 import { useRouter } from "next/router";
+import Layout from "./../../components/Layout";
+import React from "react";
+import TextField from "@material-ui/core/TextField";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
+import Radio from "@material-ui/core/Radio";
+import { Button } from "@material-ui/core";
 
 export default function In() {
   const router = useRouter();
@@ -22,53 +31,52 @@ export default function In() {
       .catch(console.log);
   }
   return (
-    <div className="in">
-      <div className="container">
-        <p>
-          <span onClick={() => router.back()}>
-            <i className="fas fa-arrow-left"></i>
-          </span>
-          <span>Record a new sale</span>
-        </p>
-        <form onSubmit={createOut}>
-          <div>
-            <label htmlFor="item">Item</label>
-            <input type="text" name="item" id="item" />
-          </div>
-          <div>
-            <span>
-              <label htmlFor="amount">
-                Amount( &#x20A6;)
-                <input type="number" name="amount" />
-              </label>
-            </span>
-            <span>
-              <label htmlFor="Quantity">
-                Quantity
-                <input type="number" name="quantity" />
-              </label>
-            </span>
-          </div>
-          <div>
-            <label htmlFor="cash">
-              <input type="radio" name="method" value="cash" defaultChecked />
-              Cash
-            </label>
-            <label htmlFor="pos">
-              <input type="radio" name="method" value="pos" />
-              POS
-            </label>
-            <label htmlFor="transfer">
-              <input type="radio" name="method" value="transfer" />
-              Transfer
-            </label>
-          </div>
-          <div></div>
-          <div>
-            <button>Add Item</button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <Layout>
+      <h3>Record a new Sale</h3>
+      <form onSubmit={createOut}>
+        <div>
+          <TextField id="standard-basic" label="Item" name="item" />
+        </div>
+        <div>
+          <TextField
+            id="standard-number"
+            label="Amount"
+            type="number"
+            name="amount"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </div>
+        <div>
+          <TextField
+            id="standard-number"
+            label="Quantity"
+            type="number"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            name="quantity"
+          />
+        </div>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">Payment Method</FormLabel>
+          <RadioGroup aria-label="method" name="method" row>
+            <FormControlLabel value="cash" control={<Radio />} label="cash" />
+            <FormControlLabel value="pos" control={<Radio />} label="pos" />
+            <FormControlLabel
+              value="transfer"
+              control={<Radio />}
+              label="transfer"
+            />
+          </RadioGroup>
+        </FormControl>
+        <div>
+          <Button variant="contained" color="primary" type="submit">
+            Save
+          </Button>
+        </div>
+      </form>
+    </Layout>
   );
 }
