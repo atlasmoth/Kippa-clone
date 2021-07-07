@@ -13,6 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import ShareIcon from "@material-ui/icons/Share";
 import { connectToDatabase } from "./../../utils/db";
 import { ObjectId } from "mongodb";
+import { getSession } from "@auth0/nextjs-auth0";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,12 +23,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CheckboxList({ id }) {
+export default function CheckboxList({ id, customer, user }) {
   const [uniqueDebt, setUniqueDebt] = useState([]);
   const [update, setUpdate] = useState({});
   const classes = useStyles();
 
   useEffect(() => {
+    console.log(id);
     axios
       .get(`/api/debt?id=${id}`)
       .then(({ data: { docs } }) => {
@@ -59,10 +61,10 @@ export default function CheckboxList({ id }) {
   function shareLocal(obj) {
     const shareData = {
       title: "Kippa",
-      text: `Hey man, you owe ${id} some ${obj.amount} due on ${new Date(
-        obj.date
-      ).toDateString()}`,
-      url: "http://localhost:3000",
+      text: `Hey ${customer.name}, you owe ${user.name} some ${
+        obj.amount
+      } naira due on ${new Date(obj.date).toDateString()}`,
+      url: "https://example.com",
     };
     navigator.share(shareData).then(console.log).catch(console.log);
   }
@@ -110,15 +112,19 @@ export default function CheckboxList({ id }) {
 }
 
 export async function getServerSideProps(ctx) {
-  const { id } = ctx.query;
+  const id = typeof ctx.query.id === "object" ? ctx.query.id[0] : ctx.query.id;
+  const { user } = getSession(ctx.req, ctx.res);
   const { db } = await connectToDatabase();
+
   const customer = await db
-    .collection("customer")
+    .collection("customers")
     .findOne({ _id: ObjectId(id) });
-  console.log(customer);
+
   return {
     props: {
       id,
+      customer: JSON.parse(JSON.stringify(customer)),
+      user,
     },
   };
 }
