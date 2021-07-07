@@ -21,7 +21,6 @@ import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 
@@ -58,6 +57,7 @@ export default function FolderList() {
     axios
       .get("/api/customers")
       .then(({ data: { docs } }) => {
+        console.log(docs);
         const total = docs.reduce((acc, { debt }) => {
           return (
             acc +
@@ -121,18 +121,17 @@ function CreateDebt({ customer, setUpdate, closeTransaction }) {
   };
   function handleDebt(e) {
     e.preventDefault();
-    console.log({ selectedDate, item, amount, selectVal });
-
+    const state = {
+      type: selectVal,
+      item,
+      amount: parseFloat(amount),
+      customer: customer._id,
+      date: new Date(new Date(selectedDate).setHours(0, 0, 0, 0)).getTime(),
+    };
+    if (state.type === "out") state.category = "debit";
     axios
-      .post("/api/debt", {
-        type: selectVal,
-        item,
-        amount: parseFloat(amount),
-        customer: customer._id,
-        date: new Date(new Date(selectedDate).setHours(0, 0, 0, 0)).getTime(),
-      })
+      .post("/api/debt", { ...state })
       .then(({ data: { doc } }) => {
-        console.log(doc);
         setUpdate((u) => ({ ...u, type: "get" }));
         closeTransaction();
       })
@@ -205,10 +204,15 @@ function CustomerItem({ c, updateState }) {
       <ListItem button>
         <ListItemAvatar>
           <Avatar>
-            <ImageIcon />
+            <Link href={`/customers/${c._id}`}>
+              <a>
+                <ImageIcon />
+              </a>
+            </Link>
           </Avatar>
         </ListItemAvatar>
         <ListItemText primary={c.name} secondary="Jan 9, 2014" />
+
         <Button
           onClick={() => setShowTransaction(!showTransaction)}
           variant="contained"
@@ -226,21 +230,4 @@ function CustomerItem({ c, updateState }) {
       )}
     </>
   );
-}
-
-{
-  /* <p>
-        <Link href={`/customers/${c._id}`}>
-          <a>
-            <span>{c.name} - </span>
-            <span>{c.phone}</span>
-          </a>
-        </Link>
-      </p>
-      <p>
-        
-      </p>
-      <div>
-        
-      </div> */
 }

@@ -1,10 +1,29 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Navbar from "../../components/navbar";
+import Layout from "./../../components/Layout";
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import ListItemText from "@material-ui/core/ListItemText";
+import Checkbox from "@material-ui/core/Checkbox";
+import IconButton from "@material-ui/core/IconButton";
+import ShareIcon from "@material-ui/icons/Share";
 
-export default function Customer({ id }) {
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+
+export default function CheckboxList({ id }) {
   const [uniqueDebt, setUniqueDebt] = useState([]);
   const [update, setUpdate] = useState({});
+  const classes = useStyles();
 
   useEffect(() => {
     axios
@@ -35,47 +54,47 @@ export default function Customer({ id }) {
       })
       .catch(console.log);
   }
-  return (
-    <div className="customer">
-      <Navbar />
-      <div className="container">
-        <div className="customer-box">
-          <div>
-            <div className="container-header">
-              <h3>Customer Name</h3>
-              <p>
-                Total &#x20A6;{" "}
-                {uniqueDebt.reduce((acc, curr) => {
-                  return curr.type === "in"
-                    ? (acc += curr.amount)
-                    : (acc -= curr.amount);
-                }, 0)}
-              </p>
-            </div>
-            {uniqueDebt.length > 0 &&
-              uniqueDebt.map((u) => (
-                <div key={u._id}>
-                  <p>
-                    <span>{u.item} </span>
-                    <span
-                      style={{
-                        color: `${u.type === "in" ? "green" : "tomato"}`,
-                      }}
-                    >
-                      &#x20A6; {u.amount}
-                    </span>
-                  </p>
 
-                  <p>Due on {new Date(u.date).toDateString()}</p>
-                  <button className="btn" onClick={() => resolve(u)}>
-                    Resolve
-                  </button>
-                </div>
-              ))}
-          </div>
-        </div>
-      </div>
-    </div>
+  return (
+    <Layout>
+      <h3>Customer Name</h3>
+      <p>
+        Total &#x20A6;{" "}
+        {uniqueDebt.reduce((acc, curr) => {
+          return curr.type === "in"
+            ? (acc += curr.amount)
+            : (acc -= curr.amount);
+        }, 0)}
+      </p>
+      <List className={classes.root}>
+        {uniqueDebt.length > 0 &&
+          uniqueDebt.map((u) => (
+            <ListItem key={u._id} role={undefined} dense button>
+              <ListItemIcon>
+                <Checkbox
+                  edge="start"
+                  tabIndex={-1}
+                  disableRipple
+                  inputProps={{ "aria-labelledby": u.item }}
+                  onChange={() => resolve(u)}
+                />
+              </ListItemIcon>
+              <ListItemText
+                id={u._id}
+                primary={u.item}
+                secondary={`Due on ${new Date(u.date).toDateString()}`}
+              />
+              {u.type === "in" && (
+                <ListItemSecondaryAction>
+                  <IconButton edge="end" aria-label="comments">
+                    <ShareIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              )}
+            </ListItem>
+          ))}
+      </List>
+    </Layout>
   );
 }
 
