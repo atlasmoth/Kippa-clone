@@ -54,7 +54,16 @@ export default function CheckboxList({ id }) {
       })
       .catch(console.log);
   }
-
+  function shareLocal(obj) {
+    const shareData = {
+      title: "Kippa",
+      text: `Hey man, you owe ${id} some ${obj.amount} due on ${new Date(
+        obj.date
+      ).toDateString()}`,
+      url: "http://localhost:3000",
+    };
+    navigator.share(shareData).then(console.log).catch(console.log);
+  }
   return (
     <Layout>
       <h3>Customer Name</h3>
@@ -87,7 +96,7 @@ export default function CheckboxList({ id }) {
               {u.type === "in" && (
                 <ListItemSecondaryAction>
                   <IconButton edge="end" aria-label="comments">
-                    <ShareIcon />
+                    <ShareIcon onClick={() => shareLocal(u)} />
                   </IconButton>
                 </ListItemSecondaryAction>
               )}

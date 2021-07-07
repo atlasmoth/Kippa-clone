@@ -13,6 +13,7 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import InputLabel from "@material-ui/core/InputLabel";
+import { makeStyles } from "@material-ui/core/styles";
 
 const data = [
   "advertising",
@@ -38,6 +39,7 @@ export default function Create() {
   function createOut(e) {
     e.preventDefault();
     const state = Object.fromEntries(new FormData(e.target));
+
     axios
       .post("/api/transactions", {
         ...state,
@@ -70,29 +72,22 @@ export default function Create() {
         </div>
 
         <div>
-          <label htmlFor="category" className="label">
-            Expense Category
-          </label>
-          <select name="category" id="category" required>
-            {data.map((d) => (
-              <option value={d} key={d}>
-                {d}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
           <FormControl className={classes.formControl}>
-            ><InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
+            <InputLabel id="demo-simple-select-helper-label">
+              Category
+            </InputLabel>
             <Select
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
+              name="category"
             >
               {data.map((d) => (
-                <MenuItem value={d}>{d}</MenuItem>
+                <MenuItem key={d} value={d}>
+                  {d}
+                </MenuItem>
               ))}
             </Select>
-            <FormHelperText>Select category</FormHelperText>
+            <FormHelperText>Select Category</FormHelperText>
           </FormControl>
         </div>
         <FormControl component="fieldset">
