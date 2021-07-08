@@ -24,7 +24,7 @@ export default function App({ categories }) {
         data={data}
         margin={{
           top: 10,
-          right: 30,
+          right: 0,
           left: 0,
           bottom: 0,
         }}

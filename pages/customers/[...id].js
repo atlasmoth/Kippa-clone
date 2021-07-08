@@ -70,7 +70,7 @@ export default function CheckboxList({ id, customer, user }) {
   }
   return (
     <Layout>
-      <h3>Customer Name</h3>
+      <h3>{customer.name}</h3>
       <p>
         Total &#x20A6;{" "}
         {uniqueDebt.reduce((acc, curr) => {
