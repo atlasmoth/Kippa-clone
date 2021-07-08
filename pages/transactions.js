@@ -138,7 +138,7 @@ function Chart({ items }) {
         </defs>
         <Area
           type="monotone"
-          dataKey="uv"
+          dataKey="amount"
           stroke="#000"
           fill="url(#splitColor)"
         />
