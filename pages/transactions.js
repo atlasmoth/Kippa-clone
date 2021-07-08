@@ -94,20 +94,6 @@ export async function getServerSideProps(ctx) {
   };
 }
 
-const gradientOffset = () => {
-  const dataMax = Math.max(...data.map((i) => i.amount));
-  const dataMin = Math.min(...data.map((i) => i.amount));
-
-  if (dataMax <= 0) {
-    return 0;
-  }
-  if (dataMin >= 0) {
-    return 1;
-  }
-
-  return dataMax / (dataMax - dataMin);
-};
-
 const off = gradientOffset();
 
 function Chart({ items }) {
@@ -115,6 +101,20 @@ function Chart({ items }) {
     ...item,
     amount: item.type === "in" ? item.amount : -item.amount,
   }));
+  const gradientOffset = () => {
+    const dataMax = Math.max(...data.map((i) => i.amount));
+    const dataMin = Math.min(...data.map((i) => i.amount));
+
+    if (dataMax <= 0) {
+      return 0;
+    }
+    if (dataMin >= 0) {
+      return 1;
+    }
+
+    return dataMax / (dataMax - dataMin);
+  };
+
   return (
     <ResponsiveContainer width="100%" height={400}>
       <AreaChart
