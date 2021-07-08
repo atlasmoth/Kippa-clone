@@ -19,7 +19,7 @@ export default function App({ categories }) {
   return (
     <ResponsiveContainer width="100%" height={400}>
       <AreaChart
-        width={500}
+        width={"100%"}
         height={400}
         data={data}
         margin={{
