@@ -31,37 +31,28 @@ export default function Navbar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}></Typography>
-          <Button>
+          <Button variant="contained" color="primary">
             <Link href="/account">
               <a>
                 <LibraryBooksIcon />
               </a>
             </Link>
           </Button>
-          <Button>
+          <Button variant="contained" color="primary">
             <Link href="/customers">
               <a>
                 <PeopleIcon />
               </a>
             </Link>
           </Button>
-          <Button>
+          <Button variant="contained" color="primary">
             <Link href="/transactions">
               <a>
                 <HistoryIcon />
               </a>
             </Link>
           </Button>
-          <Button color="inherit">
+          <Button variant="contained" color="primary">
             <a href="/api/auth/logout">Logout</a>
           </Button>
         </Toolbar>
