@@ -31,14 +31,14 @@ export default function Navbar() {
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             <Link href="/account">
-              <a>
+              <a style={{ color: "#fff", textDecoration: "none" }}>
                 <LibraryBooksIcon />
               </a>
             </Link>
           </Typography>
           <Typography variant="h6" className={classes.title}>
             <Link href="/customers">
-              <a>
+              <a style={{ color: "#fff", textDecoration: "none" }}>
                 <PeopleIcon />
               </a>
             </Link>
@@ -46,13 +46,18 @@ export default function Navbar() {
 
           <Typography variant="h6" className={classes.title}>
             <Link href="/transactions">
-              <a>
+              <a style={{ color: "#fff", textDecoration: "none" }}>
                 <HistoryIcon />
               </a>
             </Link>
           </Typography>
           <Typography variant="h6" className={classes.title}>
-            <a href="/api/auth/logout">Logout</a>
+            <a
+              style={{ color: "#fff", textDecoration: "none" }}
+              href="/api/auth/logout"
+            >
+              Logout
+            </a>
           </Typography>
         </Toolbar>
       </AppBar>
