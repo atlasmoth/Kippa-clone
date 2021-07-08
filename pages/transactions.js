@@ -8,6 +8,15 @@ import { connectToDatabase } from "./../utils/db";
 import { getSession } from "@auth0/nextjs-auth0";
 import Layout from "./../components/Layout";
 import HistoryTable from "./../components/historyTable";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function Transaction({ docs }) {
   const [transactions, setTransactions] = useState([]);
@@ -20,7 +29,7 @@ export default function Transaction({ docs }) {
   ]);
   useEffect(() => {
     const [{ startDate, endDate }] = state;
-    // console.log(new Date(startDate));
+
     const most = new Date(
       new Date(endDate.toDateString()).setHours(23, 59, 59, 59)
     ).getTime();
@@ -49,6 +58,7 @@ export default function Transaction({ docs }) {
         maxDate={new Date()}
         minDate={docs?.date ? new Date(docs.date) : new Date()}
       />
+      <Chart items={transactions} />
       <HistoryTable data={transactions} />
     </Layout>
   );
@@ -82,4 +92,59 @@ export async function getServerSideProps(ctx) {
       docs: JSON.parse(JSON.stringify(docs)),
     },
   };
+}
+
+const gradientOffset = () => {
+  const dataMax = Math.max(...data.map((i) => i.amount));
+  const dataMin = Math.min(...data.map((i) => i.amount));
+
+  if (dataMax <= 0) {
+    return 0;
+  }
+  if (dataMin >= 0) {
+    return 1;
+  }
+
+  return dataMax / (dataMax - dataMin);
+};
+
+const off = gradientOffset();
+
+function Chart({ items }) {
+  const data = items.map((item) => ({
+    ...item,
+    amount: item.type === "in" ? item.amount : -item.amount,
+  }));
+  return (
+    <ResponsiveContainer width="100%" height={400}>
+      <AreaChart
+        width={500}
+        height={400}
+        data={data}
+        margin={{
+          top: 10,
+          right: 30,
+          left: 0,
+          bottom: 0,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="item" />
+        <YAxis />
+        <Tooltip />
+        <defs>
+          <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
+            <stop offset={off} stopColor="green" stopOpacity={0.5} />
+            <stop offset={off} stopColor="red" stopOpacity={0.5} />
+          </linearGradient>
+        </defs>
+        <Area
+          type="monotone"
+          dataKey="uv"
+          stroke="#000"
+          fill="url(#splitColor)"
+        />
+      </AreaChart>
+    </ResponsiveContainer>
+  );
 }
