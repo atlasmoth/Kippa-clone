@@ -94,8 +94,6 @@ export async function getServerSideProps(ctx) {
   };
 }
 
-const off = gradientOffset();
-
 function Chart({ items }) {
   const data = items.map((item) => ({
     ...item,
@@ -114,7 +112,7 @@ function Chart({ items }) {
 
     return dataMax / (dataMax - dataMin);
   };
-
+  const off = gradientOffset();
   return (
     <ResponsiveContainer width="100%" height={400}>
       <AreaChart
