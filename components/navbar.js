@@ -6,8 +6,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import PeopleIcon from "@material-ui/icons/People";
 import HistoryIcon from "@material-ui/icons/History";
@@ -31,30 +29,31 @@ export default function Navbar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Button variant="contained" color="primary">
+          <Typography variant="h6" className={classes.title}>
             <Link href="/account">
               <a>
                 <LibraryBooksIcon />
               </a>
             </Link>
-          </Button>
-          <Button variant="contained" color="primary">
+          </Typography>
+          <Typography variant="h6" className={classes.title}>
             <Link href="/customers">
               <a>
                 <PeopleIcon />
               </a>
             </Link>
-          </Button>
-          <Button variant="contained" color="primary">
+          </Typography>
+
+          <Typography variant="h6" className={classes.title}>
             <Link href="/transactions">
               <a>
                 <HistoryIcon />
               </a>
             </Link>
-          </Button>
-          <Button variant="contained" color="primary">
+          </Typography>
+          <Typography variant="h6" className={classes.title}>
             <a href="/api/auth/logout">Logout</a>
-          </Button>
+          </Typography>
         </Toolbar>
       </AppBar>
     </div>
