@@ -18,7 +18,6 @@ import { getSession } from "@auth0/nextjs-auth0";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
   },
 }));
@@ -64,7 +63,7 @@ export default function CheckboxList({ id, customer, user }) {
       text: `Hey ${customer.name}, you owe ${user.name} some ${
         obj.amount
       } naira due on ${new Date(obj.date).toDateString()}`,
-      url: "https://example.com",
+      url: `${window.location.origin}/debt/${obj._id}`,
     };
     navigator.share(shareData).then(console.log).catch(console.log);
   }
@@ -82,7 +81,7 @@ export default function CheckboxList({ id, customer, user }) {
       <List className={classes.root}>
         {uniqueDebt.length > 0 &&
           uniqueDebt.map((u) => (
-            <ListItem key={u._id} role={undefined} dense button>
+            <ListItem key={u._id}>
               <ListItemIcon>
                 <Checkbox
                   edge="start"

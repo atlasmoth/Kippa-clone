@@ -29,15 +29,21 @@ export default function Navbar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Box display="flex" justifyContent="space-around" alignItems="center">
-            <Typography variant="h6" className={classes.title}>
+          <Box
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr 1fr",
+              width: "100%",
+            }}
+          >
+            <Typography variant="h6" className={classes.title} align="center">
               <Link href="/account">
                 <a style={{ color: "#fff", textDecoration: "none" }}>
                   <LibraryBooksIcon />
                 </a>
               </Link>
             </Typography>
-            <Typography variant="h6" className={classes.title}>
+            <Typography variant="h6" className={classes.title} align="center">
               <Link href="/customers">
                 <a style={{ color: "#fff", textDecoration: "none" }}>
                   <PeopleIcon />
@@ -45,14 +51,14 @@ export default function Navbar() {
               </Link>
             </Typography>
 
-            <Typography variant="h6" className={classes.title}>
+            <Typography variant="h6" className={classes.title} align="center">
               <Link href="/transactions">
                 <a style={{ color: "#fff", textDecoration: "none" }}>
                   <HistoryIcon />
                 </a>
               </Link>
             </Typography>
-            <Typography variant="h6" className={classes.title}>
+            <Typography variant="h6" className={classes.title} align="center">
               <a
                 style={{ color: "#fff", textDecoration: "none" }}
                 href="/api/auth/logout"
