@@ -3,7 +3,7 @@ import { connectToDatabase } from "./../../utils/db";
 export default function Debt({ data }) {
   const [
     {
-      clientele: [{ name, phone }],
+      clientele: [{ name }],
       item,
       amount,
       date,

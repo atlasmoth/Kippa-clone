@@ -60,9 +60,11 @@ export default function CheckboxList({ id, customer, user }) {
   function shareLocal(obj) {
     const shareData = {
       title: "Kippa",
-      text: `Hey ${customer.name}, you owe ${user.name} some ${
+      text: `Hey! ${customer.name}, you owe ${user.name}  ${
         obj.amount
-      } naira due on ${new Date(obj.date).toDateString()}`,
+      } naira due on ${new Date(obj.date).toDateString()} for ${
+        obj.item
+      }. You can see more details at : `,
       url: `${window.location.origin}/debt/${obj._id}`,
     };
     navigator.share(shareData).then(console.log).catch(console.log);
