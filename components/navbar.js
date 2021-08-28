@@ -38,24 +38,20 @@ export default function Navbar() {
           >
             <Typography variant="h6" className={classes.title} align="center">
               <Link href="/account">
-                <a style={{ color: "#fff", textDecoration: "none" }}>
-                  <LibraryBooksIcon />
-                </a>
+                <a style={{ color: "#fff", textDecoration: "none" }}>Account</a>
               </Link>
             </Typography>
             <Typography variant="h6" className={classes.title} align="center">
               <Link href="/customers">
                 <a style={{ color: "#fff", textDecoration: "none" }}>
-                  <PeopleIcon />
+                  Customers
                 </a>
               </Link>
             </Typography>
 
             <Typography variant="h6" className={classes.title} align="center">
               <Link href="/transactions">
-                <a style={{ color: "#fff", textDecoration: "none" }}>
-                  <HistoryIcon />
-                </a>
+                <a style={{ color: "#fff", textDecoration: "none" }}>History</a>
               </Link>
             </Typography>
             <Typography variant="h6" className={classes.title} align="center">

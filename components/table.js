@@ -42,12 +42,20 @@ export default function CustomizedTables({ data, daily }) {
           <TableRow>
             <StyledTableCell>{new Date().toDateString()}</StyledTableCell>
             <StyledTableCell align="right">
-              Cash in (&#x20A6;
-              {daily.find((d) => d._id === "in")?.total || 0})
+              Cash in {"  "}(
+              {new Intl.NumberFormat("en-NG", {
+                style: "currency",
+                currency: "NGN",
+              }).format(daily.find((d) => d._id === "in")?.total || 0)}
+              )
             </StyledTableCell>
             <StyledTableCell align="right">
-              Cash out (&#x20A6;
-              {daily.find((d) => d._id === "out")?.total || 0})
+              Cash out {"  "}(
+              {new Intl.NumberFormat("en-NG", {
+                style: "currency",
+                currency: "NGN",
+              }).format(daily.find((d) => d._id === "out")?.total || 0)}{" "}
+              )
             </StyledTableCell>
           </TableRow>
         </TableHead>

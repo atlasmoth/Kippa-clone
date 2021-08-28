@@ -74,7 +74,13 @@ export default function FolderList() {
   return (
     <Layout>
       <h3>Customers</h3>
-      <p>Total &#x20A6; {balance}</p>
+      <p>
+        Total {"  "}
+        {new Intl.NumberFormat("en-NG", {
+          style: "currency",
+          currency: "NGN",
+        }).format(balance)}
+      </p>
       <List>
         {customers.map((c) => (
           <CustomerItem c={c} key={c._id} updateState={setUpdate} />
@@ -87,9 +93,12 @@ export default function FolderList() {
           label="User's Name"
           defaultValue=""
           name="name"
+          fullWidth
         />
         <div>
-          <div className="label">Mobile Number</div>
+          <div className="label" style={{ margin: "1rem 0px" }}>
+            Mobile Number
+          </div>
           <PhoneInput
             country={"us"}
             value={phone}
@@ -97,7 +106,12 @@ export default function FolderList() {
           />
         </div>
         <div>
-          <Button type="submit" variant="contained" color="primary">
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            style={{ margin: "1rem 0px" }}
+          >
             Save
           </Button>
         </div>
@@ -136,7 +150,7 @@ function CreateDebt({ customer, setUpdate, closeTransaction }) {
   }
   return (
     <form onSubmit={handleDebt}>
-      <FormControl className={classes.formControl}>
+      <FormControl className={classes.formControl} fullWidth>
         <InputLabel id="demo-simple-select-helper-label">Type</InputLabel>
         <Select
           labelId="demo-simple-select-helper-label"
@@ -155,6 +169,7 @@ function CreateDebt({ customer, setUpdate, closeTransaction }) {
         label="Items Bought"
         onChange={(e) => setItem(e.target.value)}
         value={item}
+        fullWidth
       />{" "}
       <br />
       <TextField
@@ -167,9 +182,10 @@ function CreateDebt({ customer, setUpdate, closeTransaction }) {
         }}
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
+        fullWidth
       />{" "}
       <br />
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils} fullWidth>
         <KeyboardDatePicker
           disableToolbar
           variant="inline"
@@ -182,6 +198,7 @@ function CreateDebt({ customer, setUpdate, closeTransaction }) {
           KeyboardButtonProps={{
             "aria-label": "change date",
           }}
+          fullWidth
         />
       </MuiPickersUtilsProvider>
       <div>

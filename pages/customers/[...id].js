@@ -73,12 +73,17 @@ export default function CheckboxList({ id, customer, user }) {
     <Layout>
       <h3>{customer.name}</h3>
       <p>
-        Total &#x20A6;{" "}
-        {uniqueDebt.reduce((acc, curr) => {
-          return curr.type === "in"
-            ? (acc += curr.amount)
-            : (acc -= curr.amount);
-        }, 0)}
+        Total{" "}
+        {new Intl.NumberFormat("en-NG", {
+          style: "currency",
+          currency: "NGN",
+        }).format(
+          uniqueDebt.reduce((acc, curr) => {
+            return curr.type === "in"
+              ? (acc += curr.amount)
+              : (acc -= curr.amount);
+          }, 0)
+        )}
       </p>
       <List className={classes.root}>
         {uniqueDebt.length > 0 &&

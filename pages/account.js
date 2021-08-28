@@ -19,24 +19,32 @@ export default function Account({ user, docs }) {
           <Grid item xs={6}>
             <Typography align="center">
               Total Balance <br />
-              &#x20A6;{" "}
-              {overview.reduce((a, doc) => {
-                if (doc._id === "in") a = a + doc.total;
-                if (doc._id === "out") a = a - doc.total;
-                return a;
-              }, 0)}
+              {new Intl.NumberFormat("en-NG", {
+                style: "currency",
+                currency: "NGN",
+              }).format(
+                overview.reduce((a, doc) => {
+                  if (doc._id === "in") a = a + doc.total;
+                  if (doc._id === "out") a = a - doc.total;
+                  return a;
+                }, 0)
+              )}
             </Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography align="center">
               <span>Daily Balance </span> <br />
               <span>
-                &#x20A6;{" "}
-                {dailySummary.reduce((a, doc) => {
-                  if (doc._id === "in") a = a + doc.total;
-                  if (doc._id === "out") a = a - doc.total;
-                  return a;
-                }, 0)}
+                {new Intl.NumberFormat("en-NG", {
+                  style: "currency",
+                  currency: "NGN",
+                }).format(
+                  dailySummary.reduce((a, doc) => {
+                    if (doc._id === "in") a = a + doc.total;
+                    if (doc._id === "out") a = a - doc.total;
+                    return a;
+                  }, 0)
+                )}
               </span>
             </Typography>
           </Grid>

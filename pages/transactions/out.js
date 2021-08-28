@@ -57,7 +57,7 @@ export default function Create() {
       <h3>Record Money out</h3>
       <form onSubmit={createOut}>
         <div>
-          <TextField id="standard-basic" label="Item" name="item" />
+          <TextField id="standard-basic" label="Item" name="item" fullWidth />
         </div>
         <div>
           <TextField
@@ -68,6 +68,7 @@ export default function Create() {
             InputLabelProps={{
               shrink: true,
             }}
+            fullWidth
           />
         </div>
 
@@ -80,6 +81,7 @@ export default function Create() {
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
               name="category"
+              fullWidth
             >
               {data.map((d) => (
                 <MenuItem key={d} value={d}>

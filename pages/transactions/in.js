@@ -35,7 +35,7 @@ export default function In() {
       <h3>Record a new Sale</h3>
       <form onSubmit={createOut}>
         <div>
-          <TextField id="standard-basic" label="Item" name="item" />
+          <TextField id="standard-basic" label="Item" name="item" fullWidth />
         </div>
         <div>
           <TextField
@@ -46,6 +46,7 @@ export default function In() {
             InputLabelProps={{
               shrink: true,
             }}
+            fullWidth
           />
         </div>
         <div>
@@ -57,6 +58,7 @@ export default function In() {
               shrink: true,
             }}
             name="quantity"
+            fullWidth
           />
         </div>
         <FormControl component="fieldset">
