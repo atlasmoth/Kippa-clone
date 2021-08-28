@@ -90,7 +90,7 @@ export default function FolderList() {
       <form onSubmit={handleSubmit}>
         <TextField
           id="standard-uncontrolled"
-          label="User's Name"
+          label="Customer's Name"
           defaultValue=""
           name="name"
           fullWidth
@@ -225,7 +225,7 @@ function CustomerItem({ c, updateState }) {
             </Link>
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={c.name} secondary="Jan 9, 2014" />
+        <ListItemText primary={c.name} />
 
         <Button
           onClick={() => setShowTransaction(!showTransaction)}
